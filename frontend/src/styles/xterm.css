@@ -1,0 +1,23 @@
+@import "@xterm/xterm/css/xterm.css";
+
+.terminal-container {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-terminal-bg);
+  padding: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.terminal-container .xterm {
+  height: 100%;
+  padding: 4px;
+}
+
+.terminal-container .xterm-viewport {
+  background-color: transparent !important;
+}
+
+.terminal-container .xterm-screen {
+  font-family: var(--font-mono) !important;
+}

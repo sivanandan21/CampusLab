@@ -1,0 +1,33 @@
+:root {
+  --color-sidebar-bg: #0F172A;
+  --color-sidebar-border: #1E293B;
+  --color-sidebar-text: #94A3B8;
+  --color-sidebar-text-hover: #F8FAFC;
+  --color-sidebar-active: #2563EB;
+
+  --color-canvas-bg: #F8FAFC;
+  --color-card-bg: #FFFFFF;
+  --color-card-border: #E2E8F0;
+  --color-card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  --color-primary-tint: #EFF6FF;
+  --color-primary-border: #DBEAFE;
+
+  --color-success: #10B981;
+  --color-success-tint: #ECFDF5;
+  --color-success-border: #A7F3D0;
+
+  --color-warning: #F59E0B;
+  --color-warning-tint: #FFFBEB;
+  --color-warning-border: #FDE68A;
+
+  --color-danger: #EF4444;
+  --color-danger-tint: #FEF2F2;
+  --color-danger-border: #FECACA;
+
+  --color-terminal-bg: #0B1120;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
