@@ -6,6 +6,9 @@
   * {
     box-sizing: border-box;
   }
+  html {
+    font-size: 13.5px; /* Compact, high-density desktop scale */
+  }
   body {
     margin: 0;
     font-family: var(--font-sans);
@@ -22,8 +25,8 @@
 
 /* Custom UI Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;

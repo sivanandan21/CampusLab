@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, LogOut, ChevronDown, Check } from 'lucide-react';
+import { Lock, LogOut, ChevronDown } from 'lucide-react';
 import Topbar from '../../components/Topbar';
 import { useAuth } from '../../app/AuthContext';
 import { useSettings } from '../../app/SettingsContext';
@@ -41,11 +41,10 @@ export default function UserSettingsPage() {
 
   return (
     <div className="flex-1 flex flex-col bg-[#F8FAFC]">
-      {/* Header (Image 9) */}
       <Topbar
         title={
           <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-base font-black text-slate-900 tracking-tight">
               Profile &amp; Settings
             </h1>
           </div>
@@ -53,46 +52,46 @@ export default function UserSettingsPage() {
         showSearch={false}
       />
 
-      <div className="p-8 max-w-7xl w-full mx-auto space-y-8">
+      <div className="p-5 sm:p-6 max-w-7xl w-full mx-auto space-y-5">
         {/* Save Changes Header Action */}
         <div className="flex justify-end">
           <button
             onClick={handleSaveChanges}
-            className="px-6 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all transform active:scale-95"
+            className="px-5 py-2 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all transform active:scale-95"
           >
             Save Changes
           </button>
         </div>
 
-        {/* Top Student Identity Banner (Image 9) */}
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-slate-200 via-slate-100 to-blue-50/50 p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-center gap-5">
-            <div className="w-16 h-16 rounded-full bg-white border-2 border-blue-200 flex items-center justify-center text-xl font-black text-blue-700 shadow-sm shrink-0">
+        {/* Top Student Identity Banner */}
+        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-slate-200 via-slate-100 to-blue-50/50 p-5 sm:p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-13 h-13 rounded-full bg-white border-2 border-blue-200 flex items-center justify-center text-lg font-black text-blue-700 shadow-sm shrink-0">
               AS
             </div>
 
-            <div className="space-y-2">
-              <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+            <div className="space-y-1">
+              <h2 className="text-xl font-black text-slate-900 tracking-tight">
                 {user?.name || 'Adarsh S'}
               </h2>
 
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-lg text-xs font-mono font-bold bg-white text-slate-700 border border-slate-200 shadow-sm">
+                <span className="px-2.5 py-0.5 rounded-md text-[11px] font-mono font-bold bg-white text-slate-700 border border-slate-200 shadow-sm">
                   KTU Reg ID: {user?.ktuRegId || 'PKD24CS042'}
                 </span>
-                <span className="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200 shadow-sm">
+                <span className="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-white text-slate-700 border border-slate-200 shadow-sm">
                   B.Tech CSE • 2024 Scheme
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Current Semester Dropdown (Image 9) */}
+          {/* Current Semester Dropdown */}
           <div className="relative self-stretch sm:self-auto">
             <select
               value={currentSem}
               onChange={(e) => setCurrentSem(e.target.value as any)}
-              className="w-full appearance-none bg-white border border-slate-300 text-xs font-bold text-slate-800 py-2.5 pl-4 pr-10 rounded-xl shadow-sm focus:outline-none focus:border-[#2563EB]"
+              className="w-full appearance-none bg-white border border-slate-300 text-xs font-bold text-slate-800 py-2 pl-3 pr-8 rounded-lg shadow-sm focus:outline-none focus:border-[#2563EB]"
             >
               <option value="S4">Current Semester: Semester 4 (S4)</option>
               <option value="S1">Current Semester: Semester 1 (S1)</option>
@@ -103,15 +102,15 @@ export default function UserSettingsPage() {
               <option value="S7">Current Semester: Semester 7 (S7)</option>
               <option value="S8">Current Semester: Semester 8 (S8)</option>
             </select>
-            <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
 
-        {/* 2-Column Settings Grid (Image 9) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* 2-Column Settings Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Left Card: Terminal & Lab Preferences */}
-          <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm space-y-6">
-            <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
+          <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 sm:p-5 shadow-sm space-y-4">
+            <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2.5">
               Terminal &amp; Lab Preferences
             </h3>
 
@@ -122,7 +121,7 @@ export default function UserSettingsPage() {
                 <select
                   value={theme}
                   onChange={(e) => setTheme(e.target.value as any)}
-                  className="appearance-none bg-white border border-slate-300 text-xs font-bold text-slate-800 py-1.5 pl-3 pr-8 rounded-lg focus:outline-none focus:border-[#2563EB]"
+                  className="appearance-none bg-white border border-slate-300 text-xs font-bold text-slate-800 py-1 pl-2.5 pr-7 rounded-md focus:outline-none focus:border-[#2563EB]"
                 >
                   <option>Dark Navy</option>
                   <option>Monokai</option>
@@ -130,21 +129,21 @@ export default function UserSettingsPage() {
                   <option>Dracula</option>
                   <option>Github Dark</option>
                 </select>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
             </div>
 
             {/* Font Size Slider */}
             <div className="flex items-center justify-between gap-4">
               <span className="text-xs font-bold text-slate-700">Font Size</span>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <input
                   type="range"
                   min={12}
                   max={20}
                   value={fontSize}
                   onChange={(e) => setFontSize(Number(e.target.value))}
-                  className="w-32 accent-[#2563EB]"
+                  className="w-28 accent-[#2563EB]"
                 />
                 <span className="text-xs font-mono font-bold text-slate-500 w-8 text-right">
                   {fontSize}px
@@ -158,7 +157,7 @@ export default function UserSettingsPage() {
               <button
                 type="button"
                 onClick={() => setAutoReconnect(!autoReconnect)}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+                className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold transition-colors ${
                   autoReconnect ? 'bg-[#2563EB] text-white' : 'bg-slate-200 text-slate-600'
                 }`}
               >
@@ -172,7 +171,7 @@ export default function UserSettingsPage() {
               <button
                 type="button"
                 onClick={() => setCopyOnSelect(!copyOnSelect)}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+                className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold transition-colors ${
                   copyOnSelect ? 'bg-[#2563EB] text-white' : 'bg-slate-200 text-slate-600'
                 }`}
               >
@@ -182,9 +181,9 @@ export default function UserSettingsPage() {
           </div>
 
           {/* Right Card: Account, Notifications & Security */}
-          <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm space-y-6 flex flex-col justify-between">
-            <div className="space-y-6">
-              <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
+          <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 sm:p-5 shadow-sm space-y-4 flex flex-col justify-between">
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2.5">
                 Account, Notifications &amp; Security
               </h3>
 
@@ -194,7 +193,7 @@ export default function UserSettingsPage() {
                 <button
                   type="button"
                   onClick={() => setDeadlineReminders(!deadlineReminders)}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+                  className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold transition-colors ${
                     deadlineReminders ? 'bg-[#2563EB] text-white' : 'bg-slate-200 text-slate-600'
                   }`}
                 >
@@ -208,7 +207,7 @@ export default function UserSettingsPage() {
                 <button
                   type="button"
                   onClick={() => setCiaAlerts(!ciaAlerts)}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+                  className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold transition-colors ${
                     ciaAlerts ? 'bg-[#2563EB] text-white' : 'bg-slate-200 text-slate-600'
                   }`}
                 >
@@ -217,21 +216,21 @@ export default function UserSettingsPage() {
               </div>
             </div>
 
-            {/* Action Buttons: Change Password & Sign Out (Image 9) */}
-            <div className="flex items-center justify-between pt-6 border-t border-slate-100 gap-4">
+            {/* Action Buttons */}
+            <div className="flex items-center justify-between pt-4 border-t border-slate-100 gap-3">
               <button
                 onClick={() => showToast('Password change link sent to adarsh.s.cse24@gec.ac.in', 'info')}
-                className="px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-bold flex items-center gap-2 transition-colors"
+                className="px-3.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-bold flex items-center gap-1.5 transition-colors"
               >
-                <Lock className="w-3.5 h-3.5" />
+                <Lock className="w-3 h-3" />
                 <span>Change Password</span>
               </button>
 
               <button
                 onClick={handleSignOut}
-                className="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold flex items-center gap-2 transition-colors"
+                className="px-3.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold flex items-center gap-1.5 transition-colors"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut className="w-3 h-3" />
                 <span>Sign Out</span>
               </button>
             </div>
