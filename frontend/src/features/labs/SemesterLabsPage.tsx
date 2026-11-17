@@ -31,11 +31,11 @@ export default function SemesterLabsPage() {
       {/* Topbar */}
       <Topbar
         title={
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
-              <Shield className="w-4 h-4 fill-blue-600/20" />
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center p-0.5">
+              <img src={ASSETS.icons.ktuEmblem} alt="KTU Emblem" className="w-full h-full object-contain drop-shadow" />
             </div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight">
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
               KTU 2024 Scheme • B.Tech CSE
             </h1>
           </div>

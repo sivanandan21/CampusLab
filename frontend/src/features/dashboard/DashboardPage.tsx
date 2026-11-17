@@ -28,7 +28,7 @@ export default function DashboardPage() {
 
       {/* Main Dashboard Canvas */}
       <div className="p-6 sm:p-8 max-w-7xl w-full mx-auto space-y-6">
-        {/* Continue Lab Hero Banner */}
+        {/* Continue Lab Hero Banner with High-Fidelity Artwork */}
         <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#1D4ED8] via-[#1E40AF] to-[#0F172A] p-6 sm:p-7 text-white shadow-lg shadow-blue-900/10 border border-blue-600/30">
           <div className="absolute top-0 right-0 -mt-10 -mr-10 w-80 h-80 rounded-full bg-blue-400/20 blur-3xl pointer-events-none" />
 
@@ -69,26 +69,17 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Right Side Illustration */}
+            {/* Right Side Illustration Image (3D OS Terminal graphic) */}
             <div className="lg:col-span-4 hidden lg:flex justify-end">
-              <div className="relative w-68 h-40 rounded-2xl bg-slate-900/90 border border-blue-400/30 p-4 shadow-xl backdrop-blur-md flex flex-col justify-between">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-rose-500" />
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  </div>
-                  <span className="text-[10px] font-mono text-blue-300">s4-os-terminal</span>
-                </div>
-                <div className="font-mono text-xs text-blue-200 space-y-1">
-                  <p className="text-emerald-400">&gt; OS Process Tree</p>
-                  <p className="text-slate-400">PID: 12450 (Active)</p>
-                  <p className="text-cyan-300">CPU Burst: 4.2ms</p>
-                </div>
-                <div className="text-[10px] font-mono text-slate-500 flex justify-between">
-                  <span>Ubuntu 24.04</span>
-                  <span className="text-emerald-400">● Live</span>
-                </div>
+              <div className="relative w-72 h-44 rounded-2xl overflow-hidden shadow-2xl border border-blue-400/30 group">
+                <img
+                  src={ASSETS.illustrations.dashboardOsHero || ASSETS.icons.dashboardOsArt}
+                  alt="Operating System Lab Illustration"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.currentTarget.src = ASSETS.icons.dashboardOsArt;
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -213,7 +204,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Right: Latest Grade & Feedback */}
+          {/* Right: Latest Grade & Feedback with Faculty Avatar */}
           <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-base font-bold text-slate-900">Latest Grade &amp; Feedback</h4>
@@ -233,9 +224,9 @@ export default function DashboardPage() {
               </div>
 
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-200 border border-slate-300 shrink-0">
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-emerald-100 border border-emerald-300 shrink-0 shadow-sm">
                   <img
-                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80"
+                    src={ASSETS.avatars.faculty}
                     alt="Dr. Priya K."
                     className="w-full h-full object-cover"
                   />

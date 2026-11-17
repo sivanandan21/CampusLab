@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 90" fill="none">
+  <path d="M40 5L72 16V46C72 67 40 85 40 85C40 85 8 67 8 46V16L40 5Z" fill="url(#ktu_grad)" stroke="#F59E0B" stroke-width="2.5"/>
+  <circle cx="40" cy="36" r="16" fill="#1E3A8A" stroke="#FDE68A" stroke-width="2"/>
+  <path d="M40 26V46M30 36H50" stroke="#FDE68A" stroke-width="2"/>
+  <!-- Open Book Symbol -->
+  <path d="M26 54C32 51 38 52 40 54C42 52 48 51 54 54V64C48 61 42 62 40 64C38 62 32 61 26 64V54Z" fill="#FDE68A"/>
+  <!-- Star / Sun rays -->
+  <polygon points="40,22 42,26 46,26 43,29 44,33 40,30 36,33 37,29 34,26 38,26" fill="#F59E0B"/>
+  <defs>
+    <linearGradient id="ktu_grad" x1="40" y1="5" x2="40" y2="85" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1E40AF"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+</svg>

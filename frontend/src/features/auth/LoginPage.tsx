@@ -61,39 +61,13 @@ export default function LoginPage() {
           </div>
 
           {/* Center 3D Isometric Tech Graphic Illustration */}
-          <div className="relative my-8 py-4 flex items-center justify-center">
-            <div className="relative w-72 h-56 sm:w-80 sm:h-64 flex items-center justify-center">
-              {/* Central glowing container / laptop simulation */}
-              <div className="absolute inset-x-4 inset-y-6 rounded-2xl bg-gradient-to-br from-[#1E293B]/80 to-[#0F172A]/90 border border-blue-400/30 p-4 shadow-2xl backdrop-blur-md flex flex-col justify-between">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-700/60">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                  </div>
-                  <span className="text-[10px] font-mono text-blue-300">container: s4-cse-os-lab</span>
-                </div>
-                <div className="space-y-1 font-mono text-[11px] text-blue-200">
-                  <p className="text-emerald-400">$ gcc process_tree.c -o process_tree</p>
-                  <p className="text-slate-400">// PID hierarchy created</p>
-                  <p className="text-cyan-300">&gt; Parent Process PID: 12450</p>
-                  <p className="text-cyan-300">&gt; Child 1 PID: 12451 (parent: 12450)</p>
-                </div>
-                <div className="pt-2 flex items-center justify-between border-t border-slate-700/60 text-[10px] text-slate-400">
-                  <span>PTY 100x30</span>
-                  <span className="text-emerald-400 font-semibold">● READY</span>
-                </div>
-              </div>
-
-              {/* Floating 3D Cube badge with Linux tux icon */}
-              <motion.div
-                animate={{ y: [-4, 4, -4] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-2 -right-2 px-3 py-2 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 border border-blue-300/40 shadow-xl flex items-center gap-2"
-              >
-                <Terminal className="w-4 h-4 text-white" />
-                <span className="text-xs font-mono font-bold text-white">&gt;_ Linux</span>
-              </motion.div>
+          <div className="relative my-6 py-2 flex items-center justify-center">
+            <div className="relative w-80 h-64 sm:w-96 sm:h-72 rounded-2xl overflow-hidden shadow-2xl border border-blue-400/30 group">
+              <img
+                src={ASSETS.illustrations.loginTechHero}
+                alt="CampusLab 3D Architecture"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
           </div>
 

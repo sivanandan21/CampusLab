@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" fill="none">
+  <!-- Terminal window shell -->
+  <rect width="320" height="200" rx="16" fill="#0B132B" stroke="#1E293B" stroke-width="2"/>
+  
+  <!-- Window title bar -->
+  <rect width="320" height="32" rx="16" fill="#0F172A"/>
+  <circle cx="20" cy="16" r="4.5" fill="#EF4444"/>
+  <circle cx="34" cy="16" r="4.5" fill="#F59E0B"/>
+  <circle cx="48" cy="16" r="4.5" fill="#10B981"/>
+
+  <!-- $ Linux prompt -->
+  <text x="18" y="52" fill="#34D399" font-family="monospace" font-size="12" font-weight="bold">$ Linux</text>
+
+  <!-- Left Code lines -->
+  <line x1="18" y1="70" x2="85" y2="70" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="18" y1="82" x2="110" y2="82" stroke="#F43F5E" stroke-width="3" stroke-linecap="round"/>
+  <line x1="18" y1="94" x2="95" y2="94" stroke="#FBBF24" stroke-width="3" stroke-linecap="round"/>
+  <line x1="18" y1="106" x2="70" y2="106" stroke="#A78BFA" stroke-width="3" stroke-linecap="round"/>
+  <line x1="18" y1="118" x2="100" y2="118" stroke="#34D399" stroke-width="3" stroke-linecap="round"/>
+  <line x1="18" y1="130" x2="60" y2="130" stroke="#60A5FA" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Right Side Process Hierarchy Tree Diagram -->
+  <!-- Tree Connectors -->
+  <path d="M220 65V95M220 95H170V125M220 95H270V125M170 125H145V155M170 125H195V155M270 125H250V155M270 125H290V155" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Root Node (Red/Orange) -->
+  <circle cx="220" cy="65" r="10" fill="#EF4444" stroke="#FCA5A5" stroke-width="2"/>
+  
+  <!-- Level 1 Nodes -->
+  <circle cx="170" cy="125" r="10" fill="#FBBF24" stroke="#FEF08A" stroke-width="2"/>
+  <circle cx="270" cy="125" r="10" fill="#3B82F6" stroke="#93C5FD" stroke-width="2"/>
+
+  <!-- Level 2 Nodes (Leaf Processes) -->
+  <circle cx="145" cy="155" r="8" fill="#10B981" stroke="#A7F3D0" stroke-width="2"/>
+  <circle cx="195" cy="155" r="8" fill="#8B5CF6" stroke="#DDD6FE" stroke-width="2"/>
+  <circle cx="250" cy="155" r="8" fill="#10B981" stroke="#A7F3D0" stroke-width="2"/>
+  <circle cx="290" cy="155" r="8" fill="#EC4899" stroke="#FBCFE8" stroke-width="2"/>
+</svg>

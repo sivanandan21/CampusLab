@@ -70,14 +70,8 @@ export default function Topbar({
           to="/settings"
           className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-full hover:bg-slate-100 transition-colors border border-transparent hover:border-slate-200"
         >
-          <div className="w-8 h-8 rounded-full overflow-hidden bg-blue-100 border border-blue-300 shrink-0">
-            {user?.avatar ? (
-              <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center font-bold text-xs text-blue-600">
-                {user?.name?.[0] || 'A'}
-              </div>
-            )}
+          <div className="w-8 h-8 rounded-full overflow-hidden bg-blue-100 border border-blue-300 shrink-0 shadow-sm">
+            <img src={ASSETS.avatars.student} alt={user?.name || 'Student'} className="w-full h-full object-cover" />
           </div>
           <span className="text-xs font-semibold text-slate-700 hidden sm:inline">
             Hi, {user?.name?.split(' ')[0] || 'Student'}!

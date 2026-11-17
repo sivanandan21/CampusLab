@@ -16,6 +16,25 @@ import s6Systems from './labs/s6-systems.png';
 import s6Cybersec from './labs/s6-cybersec.png';
 import projects from './labs/projects.png';
 
+// AI Illustrations
+import dashboardOsHero from './illustrations/dashboard-os-hero.png';
+import terminalProcessTree from './illustrations/terminal-process-tree.png';
+import loginTechHero from './illustrations/login-tech-hero.png';
+
+// Image Icons & Art
+import cIcon from './icons/c-icon.svg';
+import forkIcon from './icons/fork-icon.svg';
+import treeIcon from './icons/tree-icon.svg';
+import ktuEmblem from './icons/ktu-emblem.svg';
+import dashboardOsArt from './icons/dashboard-os-art.svg';
+import terminalTreeArt from './icons/terminal-tree-art.svg';
+import terminalPreview from './icons/terminal-preview.svg';
+import sqlPreview from './icons/sql-preview.svg';
+
+// Avatars
+import studentAvatar from './avatars/student-avatar.svg';
+import facultyAvatar from './avatars/faculty-avatar.svg';
+
 export const ASSETS = {
   brand: {
     logo: brandLogo,
@@ -41,6 +60,25 @@ export const ASSETS = {
     PCCSP706: projects,
     PCCSP806: projects,
   } as Record<string, string>,
+  illustrations: {
+    dashboardOsHero,
+    terminalProcessTree,
+    loginTechHero,
+  },
+  icons: {
+    c: cIcon,
+    fork: forkIcon,
+    tree: treeIcon,
+    ktuEmblem,
+    dashboardOsArt,
+    terminalTreeArt,
+    terminalPreview,
+    sqlPreview,
+  },
+  avatars: {
+    student: studentAvatar,
+    faculty: facultyAvatar,
+  },
 } as const;
 
 export default ASSETS;

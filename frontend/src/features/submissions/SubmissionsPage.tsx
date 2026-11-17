@@ -11,6 +11,7 @@ import Topbar from '../../components/Topbar';
 import { MOCK_SUBMISSIONS } from '../../data/mockData';
 import { Submission } from '../../types/submission';
 import { useToast } from '../../app/ToastProvider';
+import { ASSETS } from '../../assets';
 
 export default function SubmissionsPage() {
   const [selectedSub, setSelectedSub] = useState<Submission | null>(null);
@@ -132,11 +133,13 @@ export default function SubmissionsPage() {
                     </p>
                   </div>
 
-                  {/* Code Thumbnail Preview on right */}
-                  <div className="w-44 h-16 rounded-lg bg-slate-950 p-2 font-mono text-[8px] text-emerald-400 overflow-hidden border border-slate-800 shadow-inner hidden sm:block">
-                    <pre className="opacity-80 leading-tight">
-                      {sub.codeSnippetPreview?.substring(0, 95)}...
-                    </pre>
+                  {/* Code Thumbnail Image Preview on right */}
+                  <div className="w-48 h-20 rounded-xl overflow-hidden border border-slate-200 shadow-sm hidden sm:block shrink-0">
+                    <img
+                      src={sub.language === 'sql' ? ASSETS.icons.sqlPreview : ASSETS.icons.terminalPreview}
+                      alt="Execution Output Preview"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </div>
 

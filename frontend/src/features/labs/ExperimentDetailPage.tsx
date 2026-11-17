@@ -16,6 +16,7 @@ import Topbar from '../../components/Topbar';
 import { KTU_2024_CSE_COURSES } from '../../data/ktu2024CseLabs';
 import { useToast } from '../../app/ToastProvider';
 import { sessionService } from '../../services/sessionService';
+import { ASSETS } from '../../assets';
 
 export default function ExperimentDetailPage() {
   const { courseId = 'PCCSL407', expId = 'exp-04' } = useParams();
@@ -151,26 +152,15 @@ export default function ExperimentDetailPage() {
 
             {/* Right Side Linux Terminal & Process Tree Illustration */}
             <div className="lg:col-span-4 hidden lg:flex justify-end">
-              <div className="w-64 rounded-xl bg-slate-950/90 border border-blue-500/40 p-3 shadow-xl backdrop-blur-md">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2">
-                  <span className="text-[10px] font-mono font-bold text-emerald-400">$ Linux</span>
-                  <div className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                  </div>
-                </div>
-
-                {/* Simulated Process Tree Diagram in Terminal */}
-                <div className="space-y-1 font-mono text-[9px]">
-                  <div className="text-blue-300">├── Parent PID [12450]</div>
-                  <div className="text-cyan-400 pl-3">├── Child 1 PID [12451]</div>
-                  <div className="text-cyan-400 pl-3">└── Child 2 PID [12452]</div>
-                </div>
-
-                <div className="mt-3 pt-1.5 border-t border-slate-800/80 flex items-center justify-between text-[9px] text-slate-400">
-                  <span>gcc 13.2 POSIX</span>
-                  <span className="text-emerald-400 font-semibold">Ready</span>
-                </div>
+              <div className="w-72 h-44 rounded-xl overflow-hidden shadow-2xl border border-blue-400/40 group">
+                <img
+                  src={ASSETS.illustrations.terminalProcessTree || ASSETS.icons.terminalTreeArt}
+                  alt="Process Tree Terminal Graphic"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.currentTarget.src = ASSETS.icons.terminalTreeArt;
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -178,39 +168,39 @@ export default function ExperimentDetailPage() {
 
         {/* 3-Column Detail Cards Below */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Card 1: What You Will Practice */}
+          {/* Card 1: What You Will Practice with Real Image Icons */}
           <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 sm:p-5 shadow-sm flex flex-col justify-between">
             <h3 className="text-sm font-bold text-slate-900 mb-3">What You Will Practice</h3>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-md bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs">
-                    C
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm">
+                    <img src={ASSETS.icons.c} alt="C Logo" className="w-full h-full object-contain" />
                   </div>
                   <span className="text-xs font-bold text-slate-800">C Programming</span>
                 </div>
-                <FileCode className="w-3.5 h-3.5 text-slate-400" />
+                <FileCode className="w-4 h-4 text-blue-500" />
               </div>
 
               <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-md bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
-                    fork
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm">
+                    <img src={ASSETS.icons.fork} alt="fork() Syscall" className="w-full h-full object-contain" />
                   </div>
-                  <span className="text-xs font-bold text-slate-800">fork()</span>
+                  <span className="text-xs font-bold text-slate-800">fork() System Call</span>
                 </div>
-                <Cpu className="w-3.5 h-3.5 text-slate-400" />
+                <Cpu className="w-4 h-4 text-indigo-500" />
               </div>
 
               <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
-                    Tree
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm">
+                    <img src={ASSETS.icons.tree} alt="Process Tree" className="w-full h-full object-contain" />
                   </div>
-                  <span className="text-xs font-bold text-slate-800">Process Tree</span>
+                  <span className="text-xs font-bold text-slate-800">Process Tree Hierarchy</span>
                 </div>
-                <Layers className="w-3.5 h-3.5 text-slate-400" />
+                <Layers className="w-4 h-4 text-emerald-500" />
               </div>
             </div>
           </div>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="16" fill="url(#c_grad)"/>
+  <path d="M42 22C39.5 19 35.5 17.5 31 17.5C21.5 17.5 15 24 15 32C15 40 21.5 46.5 31 46.5C36 46.5 40 44.8 42.5 41.5L37.5 37.5C35.8 39.5 33.6 40.5 31 40.5C25.5 40.5 22 36.5 22 32C22 27.5 25.5 23.5 31 23.5C33.5 23.5 35.5 24.5 37 26.2L42 22Z" fill="white"/>
+  <defs>
+    <linearGradient id="c_grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+</svg>

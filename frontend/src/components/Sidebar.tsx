@@ -82,12 +82,8 @@ export default function Sidebar() {
       <div className="p-4 border-t border-[#1E293B]">
         <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#1E293B]/50 hover:bg-[#1E293B]/90 transition-colors">
           <Link to="/settings" className="flex items-center gap-3 flex-1 min-w-0 group">
-            <div className="w-9 h-9 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center font-bold text-xs text-blue-300 shrink-0 overflow-hidden">
-              {user?.avatar ? (
-                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-              ) : (
-                'AS'
-              )}
+            <div className="w-9 h-9 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center font-bold text-xs text-blue-300 shrink-0 overflow-hidden shadow-sm">
+              <img src={ASSETS.avatars.student} alt={user?.name || 'Student'} className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col min-w-0">
               <span className="text-sm font-semibold text-white truncate group-hover:text-blue-400 transition-colors leading-tight">
