@@ -1,0 +1,121 @@
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------
+  # 1. LocalStack (AWS S3, Secrets Manager, CloudWatch, STS Mock)
+  # ---------------------------------------------------------------------------
+  localstack:
+    image: localstack/localstack:latest
+    container_name: campuslab-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,secretsmanager,cloudwatch,sts
+      - AWS_DEFAULT_REGION=ap-south-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack_data:/var/lib/localstack
+
+  # ---------------------------------------------------------------------------
+  # 2. PostgreSQL 16 (CampusLab Database)
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: campuslab-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=campuslab
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../../database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d campuslab"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # 3. Redis 7 (Cache & Session Locks)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: campuslab-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # 4. CampusLab FastAPI Backend
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    container_name: campuslab-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=development
+      - AWS_REGION=ap-south-1
+      - S3_ENDPOINT_URL=http://localstack:4566
+      - S3_ARTIFACT_BUCKET=campuslab-artifacts-ap-south-1
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/campuslab
+      - WORKER_API_URL=http://lab-worker:8001
+      - APP_SECRET_KEY=campuslab_master_secret_key_ktu_2024_pilot_testing_only_32_bytes_long
+      - WORKER_SHARED_SECRET=worker_hmac_shared_secret_campuslab_ktu2024
+    depends_on:
+      postgres:
+        condition: service_healthy
+      localstack:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../../backend/app:/app/app
+
+  # ---------------------------------------------------------------------------
+  # 5. CampusLab EC2 Lab Worker Service
+  # ---------------------------------------------------------------------------
+  lab-worker:
+    build:
+      context: ../../lab-worker
+      dockerfile: Dockerfile
+    container_name: campuslab-worker
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - WORKER_SHARED_SECRET=worker_hmac_shared_secret_campuslab_ktu2024
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - ../../lab-worker/campuslab_worker:/app/campuslab_worker
+
+  # ---------------------------------------------------------------------------
+  # 6. React + TypeScript + xterm.js Frontend
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile
+    container_name: campuslab-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000/api/v1
+      - VITE_USE_MOCK_API=false
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  localstack_data:

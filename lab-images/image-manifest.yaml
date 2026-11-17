@@ -1,0 +1,59 @@
+version: "1.0"
+registry: "campuslab"
+scheme: "KTU 2024 Scheme B.Tech CSE"
+
+images:
+  - name: "ktu-base-linux"
+    tag: "2024"
+    dockerfile: "ktu-base-linux/Dockerfile"
+    base_os: "Ubuntu 24.04 LTS"
+    default_user: "student (UID: 1000, GID: 1000, passwordless sudo in container)"
+    toolchains:
+      - "GNU Coreutils, Util-Linux, Findutils, Diffutils (ls, cp, mv, rm, cat, grep, awk, sed, find, tar, zip, jq)"
+      - "gcc / g++ 13.x (C17 / C++20), Clang, LLVM, GDB, Valgrind, Make, CMake"
+      - "python 3.12 (NumPy, SciPy, Pandas, Matplotlib)"
+      - "openjdk-21-jdk-headless (javac, java, jar)"
+      - "nodejs / npm"
+      - "postgresql-client 16 (psql), SQLite3, MariaDB-client"
+      - "flex 2.6 / bison 3.8 / m4"
+      - "nasm / yasm / iverilog / gtkwave"
+      - "System & Process: ps, top, htop, pstree, lsof, strace, ltrace, sysstat (iostat/mpstat/sar), free, vmstat"
+      - "Networking: ip, ifconfig, ping, netstat, ss, traceroute, curl, wget, netcat, socat, tcpdump, tshark, nmap"
+      - "Editors & Shells: nano, vim, ed, tmux, screen, bash, zsh"
+    courses_supported:
+      - "UCEST105: Algorithmic Thinking with Python (S1)"
+      - "GXESL106: Electrical & Electronics Workshop (S1)"
+      - "GXEST204: Programming in C (S2)"
+      - "GXESL208: IT Workshop (S2)"
+      - "PCCSL307: Data Structures Lab (S3)"
+      - "PCCSL308: Digital System Design Lab (S3)"
+      - "PBCST304: Object Oriented Programming Lab (S3)"
+      - "PCCSL407: Operating Systems Lab (S4)"
+      - "PCCSL408: DBMS Lab (S4)"
+      - "PBCST404: Computer Org & Arch - PBL (S4)"
+      - "PCCSL507: Networks Lab (S5)"
+      - "PCCSL508: Machine Learning Lab (S5)"
+      - "PBCST504: Microcontrollers & Embedded Systems Lab (S5)"
+      - "PCCSL607: Systems & Compiler Lab (S6)"
+      - "PBCST604: Cyber Security & Forensics Lab (S6)"
+    security_hardening:
+      no_new_privileges: true
+      cap_drop: ["ALL"]
+      cap_add: ["CHOWN", "DAC_OVERRIDE", "SETUID", "SETGID", "NET_RAW"]
+      pids_limit: 128
+      memory_quota: "1024MB"
+      cpu_quota: "1.0 vCPU"
+
+  - name: "ktu-aws-cli"
+    tag: "2024"
+    dockerfile: "ktu-aws-cli/Dockerfile"
+    base_image: "campuslab/ktu-base-linux:2024"
+    default_user: "student (UID: 1000, GID: 1000)"
+    toolchains:
+      - "aws-cli v2.x"
+      - "sts sandbox credential auto-injector"
+    courses_supported:
+      - "Cloud & AWS Practical Sandbox"
+    security_hardening:
+      region_lock: "ap-south-1"
+      max_session_duration: "2700s (45m)"

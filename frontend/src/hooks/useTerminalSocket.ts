@@ -3,6 +3,7 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { useSettings } from '../app/SettingsContext';
 import { Course, Experiment } from '../types/lab';
+import { createInitialShellState, runLinuxCommand, ShellState } from '../utils/linuxShellSimulator';
 
 interface UseTerminalSocketOptions {
   sessionId: string;
@@ -22,6 +23,12 @@ export function useTerminalSocket({ sessionId, course, experiment, onCommandRun 
   const codeTag = (course?.code || 'oslab').toLowerCase();
   const hostName = `ktu-${semTag}-${codeTag}`;
   const promptStr = `student@${hostName}:~$ `;
+
+  const shellStateRef = useRef<ShellState>(createInitialShellState(course, experiment));
+
+  useEffect(() => {
+    shellStateRef.current = createInitialShellState(course, experiment);
+  }, [course, experiment]);
 
   const fitTerminal = useCallback(() => {
     if (fitAddonRef.current && termInstance.current) {
@@ -112,66 +119,17 @@ export function useTerminalSocket({ sessionId, course, experiment, onCommandRun 
     };
 
     const executeSimulatedCommand = (cmd: string) => {
-      const parts = cmd.split(' ');
-      const main = parts[0].toLowerCase();
+      const result = runLinuxCommand(cmd, shellStateRef.current, experiment);
 
-      if (cmd === 'clear') {
+      if (result.clear) {
         term.clear();
         term.write(promptStr);
         return;
       }
 
-      if (cmd === 'help') {
-        term.writeln('\r\n\x1b[1;33mAvailable Commands:\x1b[0m');
-        term.writeln('  ls, pwd, cat, gcc, python3, psql, ps, clear, whoami, help');
-        if (experiment?.initialExecutionCmd) {
-          term.writeln(`  Suggested: \x1b[32m${experiment.initialExecutionCmd}\x1b[0m`);
-        }
-      } else if (cmd === 'ls' || cmd.startsWith('ls ')) {
-        const ext = experiment?.submissionRequirements?.acceptedFormats?.split(',')[0] || '.c';
-        term.writeln(`main${ext}  solution${ext}  Makefile  output.log  README.md`);
-      } else if (cmd === 'pwd') {
-        term.writeln(`/home/student/${hostName}`);
-      } else if (cmd === 'whoami') {
-        term.writeln('student');
-      } else if (cmd.includes('python') || main === 'python3') {
-        term.writeln('\x1b[32m[Python 3.12 Sandbox Execution: OK]\x1b[0m');
-        if (experiment?.initialExecutionOutput) {
-          experiment.initialExecutionOutput.split('\n').forEach(l => term.writeln(l));
-        } else {
-          term.writeln('Python script executed successfully. 0 errors.');
-        }
-      } else if (cmd.includes('gcc') || cmd.startsWith('./') || cmd.includes('make')) {
-        term.writeln('\x1b[32m[GCC C17 Compilation: OK]\x1b[0m');
-        if (experiment?.initialExecutionOutput) {
-          experiment.initialExecutionOutput.split('\n').forEach(l => term.writeln(l));
-        } else {
-          term.writeln('Binary executed. Return code: 0.');
-        }
-      } else if (cmd.includes('psql') || cmd.includes('sql')) {
-        term.writeln('psql (PostgreSQL 16.2)');
-        term.writeln('Connected to campuslab_db.');
-        if (experiment?.initialExecutionOutput) {
-          experiment.initialExecutionOutput.split('\n').forEach(l => term.writeln(l));
-        }
-      } else if (cmd === 'ps' || cmd.startsWith('ps ')) {
-        term.writeln('  PID TTY          TIME CMD');
-        term.writeln('12440 pts/0    00:00:00 bash');
-        term.writeln('12450 pts/0    00:00:00 container-runtime');
-        term.writeln('12490 pts/0    00:00:00 ps');
-      } else if (main === 'cat') {
-        if (experiment?.sampleStarterCode) {
-          experiment.sampleStarterCode.split('\\n').forEach(l => term.writeln(l));
-        } else {
-          term.writeln('// Starter code initialized.');
-        }
-      } else if (experiment?.initialExecutionCmd && cmd.includes(experiment.initialExecutionCmd.split(' ')[0])) {
-        if (experiment?.initialExecutionOutput) {
-          experiment.initialExecutionOutput.split('\n').forEach(l => term.writeln(l));
-        }
-      } else {
-        term.writeln(`bash: ${main}: command completed in sandbox`);
-      }
+      result.output.forEach((line) => {
+        term.writeln(line);
+      });
 
       term.write(promptStr);
     };
