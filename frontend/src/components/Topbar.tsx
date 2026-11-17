@@ -2,6 +2,7 @@ import React from 'react';
 import { Search, Bell, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../app/AuthContext';
+import { ASSETS } from '../assets';
 
 interface TopbarProps {
   title?: React.ReactNode;
