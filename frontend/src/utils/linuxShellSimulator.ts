@@ -461,6 +461,45 @@ export function runLinuxCommand(
     };
   }
 
+  if (main === 'nginx') {
+    if (args.includes('-v') || args.includes('-V')) {
+      return { output: ['nginx version: nginx/1.24.0 (Ubuntu 24.04 LTS)'] };
+    }
+    if (args.includes('-t')) {
+      return {
+        output: [
+          'nginx: the configuration file /etc/nginx/nginx.conf syntax is ok',
+          'nginx: configuration file /etc/nginx/nginx.conf test is successful',
+        ],
+      };
+    }
+    if (args.includes('-s')) {
+      return { output: [`[OK] Nginx signal '${args[1] || 'reload'}' dispatched successfully.`] };
+    }
+    return {
+      output: [
+        'Starting nginx... [OK]',
+        'Nginx 1.24.0 running on http://127.0.0.1:80',
+        'Serving reverse proxy to CampusLab API & Frontend.',
+      ],
+    };
+  }
+
+  if (main === 'systemctl' || main === 'service') {
+    const target = args.find(a => !a.startsWith('-') && a !== 'status' && a !== 'start' && a !== 'restart') || 'nginx';
+    return {
+      output: [
+        `● ${target}.service - Service Unit for ${target}`,
+        `     Loaded: loaded (/lib/systemd/system/${target}.service; enabled)`,
+        `     Active: active (running) since Tue 2026-10-24 10:15:00 IST; 4h 12min ago`,
+        `   Main PID: 1042 (${target})`,
+        `      Tasks: 4 (limit: 128)`,
+        `     Memory: 18.4M`,
+        `        CPU: 142ms`,
+      ],
+    };
+  }
+
   if (main === 'netstat' || main === 'ss') {
     return {
       output: [

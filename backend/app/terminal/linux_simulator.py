@@ -336,6 +336,32 @@ class LinuxShell:
                 "2 packets transmitted, 2 received, 0% packet loss, time 1002ms",
             ], False
 
+        if main == "nginx":
+            if "-v" in args or "-V" in args:
+                return ["nginx version: nginx/1.24.0 (Ubuntu 24.04 LTS)"], False
+            if "-t" in args:
+                return [
+                    "nginx: the configuration file /etc/nginx/nginx.conf syntax is ok",
+                    "nginx: configuration file /etc/nginx/nginx.conf test is successful",
+                ], False
+            if "-s" in args:
+                sig = args[1] if len(args) > 1 else "reload"
+                return [f"[OK] Nginx signal '{sig}' dispatched successfully."], False
+            return [
+                "Starting nginx... [OK]",
+                "Nginx 1.24.0 active on port 80",
+                "Reverse proxying to CampusLab API & Frontend.",
+            ], False
+
+        if main in ("systemctl", "service"):
+            target = next((a for a in args if not a.startswith("-") and a not in ("status", "start", "restart")), "nginx")
+            return [
+                f"● {target}.service - Service Unit for {target}",
+                f"     Loaded: loaded (/lib/systemd/system/{target}.service; enabled)",
+                f"     Active: active (running) since Tue 2026-10-24 10:15:00 IST; 4h 12min ago",
+                f"   Main PID: 1042 ({target})",
+            ], False
+
         if main in ("netstat", "ss"):
             return [
                 "Active Internet connections (only servers)",

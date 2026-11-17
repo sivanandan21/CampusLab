@@ -80,6 +80,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     whois \
     rsync \
     openssh-client \
+    nginx \
     \
     # Compilers, Debuggers, Assemblers & Build Tools (C / C++ / Lex / Yacc / ASM)
     build-essential \

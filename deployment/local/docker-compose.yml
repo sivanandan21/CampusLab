@@ -116,6 +116,26 @@ services:
     depends_on:
       - backend
 
+  # ---------------------------------------------------------------------------
+  # 7. Nginx Unified Gateway & Reverse Proxy
+  # ---------------------------------------------------------------------------
+  nginx:
+    build:
+      context: ../nginx
+      dockerfile: Dockerfile
+    container_name: campuslab-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - backend
+      - lab-worker
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx/conf.d:/etc/nginx/conf.d:ro
+
 volumes:
   postgres_data:
   localstack_data:
