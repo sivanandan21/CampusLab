@@ -1,30 +1,72 @@
-# Logs
-logs
-*.log
+# ==============================================================================
+# CampusLab Git Ignore
+# ==============================================================================
+
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Node modules
-node_modules
-dist
-dist-ssr
-*.local
+# Python & Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Editor directories and files
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# Database & Local Run
+*.db
+*.sqlite3
+campuslab.db
+
+# Environment & Secrets (NEVER commit live secrets)
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env
+frontend/.env.local
+
+# IDEs & OS
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-
-# Environment
-.env
-.env.*
-!.env.example
+.DS_Store
+Thumbs.db
