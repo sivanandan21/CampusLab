@@ -120,8 +120,8 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex items-center justify-between pt-2 border-t border-slate-100">
                   <button
-                    onClick={() => navigate('/labs/PCCSL408/dbms-exp-05')}
-                    className="px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold transition-colors"
+                    onClick={() => navigate('/labs/PCCSL408/pccsl408-exp05')}
+                    className="px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold transition-colors cursor-pointer"
                   >
                     Start Lab
                   </button>

@@ -2,21 +2,26 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { useSettings } from '../app/SettingsContext';
+import { Course, Experiment } from '../types/lab';
 
 interface UseTerminalSocketOptions {
   sessionId: string;
+  course?: Course;
+  experiment?: Experiment;
   onCommandRun?: (cmd: string) => void;
 }
 
-export function useTerminalSocket({ sessionId, onCommandRun }: UseTerminalSocketOptions) {
+export function useTerminalSocket({ sessionId, course, experiment, onCommandRun }: UseTerminalSocketOptions) {
   const terminalRef = useRef<HTMLDivElement | null>(null);
   const termInstance = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<'CONNECTED' | 'RECONNECTING' | 'EXPIRED'>('CONNECTED');
-  const [currentLine, setCurrentLine] = useState('');
   const { preferences, terminalThemeColors } = useSettings();
 
-  const prompt = '\r\n\x1b[1;32mstudent@ktu-s4-oslab\x1b[0m:\x1b[1;34m~\x1b[0m$ ';
+  const semTag = (course?.semester || 's4').toLowerCase();
+  const codeTag = (course?.code || 'oslab').toLowerCase();
+  const hostName = `ktu-${semTag}-${codeTag}`;
+  const promptStr = `student@${hostName}:~$ `;
 
   const fitTerminal = useCallback(() => {
     if (fitAddonRef.current && termInstance.current) {
@@ -32,10 +37,11 @@ export function useTerminalSocket({ sessionId, onCommandRun }: UseTerminalSocket
     if (!termInstance.current) return;
     termInstance.current.reset();
     termInstance.current.writeln('\x1b[1;36m=== CampusLab Isolated Linux Sandbox (KTU 2024 Scheme) ===\x1b[0m');
-    termInstance.current.writeln('Environment: Ubuntu 24.04 LTS (Containerized non-root workspace)');
-    termInstance.current.writeln('Type \x1b[1;33mhelp\x1b[0m to view laboratory commands, or run gcc / python3 / psql directly.\r\n');
-    termInstance.current.write('student@ktu-s4-oslab:~$ ');
-  }, []);
+    termInstance.current.writeln(`Environment: ${experiment?.environment || 'Ubuntu 24.04 LTS Container'}`);
+    termInstance.current.writeln(`Course: ${course?.code || 'PCCSL407'} ${course?.title || 'Lab'} • Exp ${experiment?.expNumber || 1}`);
+    termInstance.current.writeln('Type \x1b[1;33mhelp\x1b[0m to view commands, or run code directly.\r\n');
+    termInstance.current.write(promptStr);
+  }, [course, experiment, promptStr]);
 
   useEffect(() => {
     if (!terminalRef.current) return;
@@ -59,12 +65,15 @@ export function useTerminalSocket({ sessionId, onCommandRun }: UseTerminalSocket
     termInstance.current = term;
     fitAddonRef.current = fitAddon;
 
-    // Print Initial Banner and simulated existing execution (matches Image 5)
-    term.writeln('student@ktu-s4-oslab:~$ gcc process_tree.c -o process_tree && ./process_tree');
-    term.writeln('Parent Process PID: 12450');
-    term.writeln('Child 1 Process PID: 12451 (parent: 12450)');
-    term.writeln('Child 2 Process PID: 12452 (parent: 12450)');
-    term.write('student@ktu-s4-oslab:~$ ');
+    // Initial output
+    const initialCmd = experiment?.initialExecutionCmd || 'gcc process_tree.c -o process_tree && ./process_tree';
+    const initialOut = experiment?.initialExecutionOutput || 'Parent Process PID: 12450\nChild 1 Process PID: 12451 (parent: 12450)\nChild 2 Process PID: 12452 (parent: 12450)';
+
+    term.writeln(`${promptStr}${initialCmd}`);
+    initialOut.split('\n').forEach((line) => {
+      term.writeln(line);
+    });
+    term.write(promptStr);
 
     let cmdBuffer = '';
 
@@ -79,7 +88,7 @@ export function useTerminalSocket({ sessionId, onCommandRun }: UseTerminalSocket
           executeSimulatedCommand(trimmed);
           onCommandRun?.(trimmed);
         } else {
-          term.write('student@ktu-s4-oslab:~$ ');
+          term.write(promptStr);
         }
         cmdBuffer = '';
       }
@@ -92,7 +101,7 @@ export function useTerminalSocket({ sessionId, onCommandRun }: UseTerminalSocket
       }
       // Ctrl+C
       else if (code === 3) {
-        term.write('^C\r\nstudent@ktu-s4-oslab:~$ ');
+        term.write(`^C\r\n${promptStr}`);
         cmdBuffer = '';
       }
       // Regular printable input
@@ -104,47 +113,67 @@ export function useTerminalSocket({ sessionId, onCommandRun }: UseTerminalSocket
 
     const executeSimulatedCommand = (cmd: string) => {
       const parts = cmd.split(' ');
-      const main = parts[0];
+      const main = parts[0].toLowerCase();
 
       if (cmd === 'clear') {
         term.clear();
-        term.write('student@ktu-s4-oslab:~$ ');
+        term.write(promptStr);
         return;
       }
 
       if (cmd === 'help') {
         term.writeln('\r\n\x1b[1;33mAvailable Commands:\x1b[0m');
-        term.writeln('  ls, pwd, cat, gcc, ./<binary>, ps, clear, whoami, help');
-        term.writeln('  Example: \x1b[32mgcc process_tree.c -o process_tree && ./process_tree\x1b[0m');
+        term.writeln('  ls, pwd, cat, gcc, python3, psql, ps, clear, whoami, help');
+        if (experiment?.initialExecutionCmd) {
+          term.writeln(`  Suggested: \x1b[32m${experiment.initialExecutionCmd}\x1b[0m`);
+        }
       } else if (cmd === 'ls' || cmd.startsWith('ls ')) {
-        term.writeln('process_tree.c  Makefile  output.log  process_tree*');
+        const ext = experiment?.submissionRequirements?.acceptedFormats?.split(',')[0] || '.c';
+        term.writeln(`main${ext}  solution${ext}  Makefile  output.log  README.md`);
       } else if (cmd === 'pwd') {
-        term.writeln('/home/student/ktu-s4-oslab');
+        term.writeln(`/home/student/${hostName}`);
       } else if (cmd === 'whoami') {
         term.writeln('student');
-      } else if (cmd.includes('process_tree') && (cmd.includes('gcc') || cmd.startsWith('./'))) {
-        if (cmd.includes('gcc')) {
-          term.writeln('\x1b[32m[Compiling process_tree.c... Done]\x1b[0m');
+      } else if (cmd.includes('python') || main === 'python3') {
+        term.writeln('\x1b[32m[Python 3.12 Sandbox Execution: OK]\x1b[0m');
+        if (experiment?.initialExecutionOutput) {
+          experiment.initialExecutionOutput.split('\n').forEach(l => term.writeln(l));
+        } else {
+          term.writeln('Python script executed successfully. 0 errors.');
         }
-        term.writeln('Parent Process PID: 12450');
-        term.writeln('Child 1 Process PID: 12451 (parent: 12450)');
-        term.writeln('Child 2 Process PID: 12452 (parent: 12450)');
+      } else if (cmd.includes('gcc') || cmd.startsWith('./') || cmd.includes('make')) {
+        term.writeln('\x1b[32m[GCC C17 Compilation: OK]\x1b[0m');
+        if (experiment?.initialExecutionOutput) {
+          experiment.initialExecutionOutput.split('\n').forEach(l => term.writeln(l));
+        } else {
+          term.writeln('Binary executed. Return code: 0.');
+        }
+      } else if (cmd.includes('psql') || cmd.includes('sql')) {
+        term.writeln('psql (PostgreSQL 16.2)');
+        term.writeln('Connected to campuslab_db.');
+        if (experiment?.initialExecutionOutput) {
+          experiment.initialExecutionOutput.split('\n').forEach(l => term.writeln(l));
+        }
       } else if (cmd === 'ps' || cmd.startsWith('ps ')) {
         term.writeln('  PID TTY          TIME CMD');
         term.writeln('12440 pts/0    00:00:00 bash');
-        term.writeln('12450 pts/0    00:00:00 process_tree');
-        term.writeln('12451 pts/0    00:00:00 process_tree <defunct>');
-        term.writeln('12452 pts/0    00:00:00 process_tree <defunct>');
+        term.writeln('12450 pts/0    00:00:00 container-runtime');
         term.writeln('12490 pts/0    00:00:00 ps');
       } else if (main === 'cat') {
-        term.writeln('#include <stdio.h>');
-        term.writeln('#include <unistd.h>');
-        term.writeln('int main() { printf("Parent PID: %d\\n", getpid()); fork(); return 0; }');
+        if (experiment?.sampleStarterCode) {
+          experiment.sampleStarterCode.split('\\n').forEach(l => term.writeln(l));
+        } else {
+          term.writeln('// Starter code initialized.');
+        }
+      } else if (experiment?.initialExecutionCmd && cmd.includes(experiment.initialExecutionCmd.split(' ')[0])) {
+        if (experiment?.initialExecutionOutput) {
+          experiment.initialExecutionOutput.split('\n').forEach(l => term.writeln(l));
+        }
       } else {
-        term.writeln(`bash: ${main}: command not found (simulated lab sandbox)`);
+        term.writeln(`bash: ${main}: command completed in sandbox`);
       }
 
-      term.write('student@ktu-s4-oslab:~$ ');
+      term.write(promptStr);
     };
 
     const disposable = term.onData(handleKeyData);
@@ -157,7 +186,7 @@ export function useTerminalSocket({ sessionId, onCommandRun }: UseTerminalSocket
       window.removeEventListener('resize', handleResize);
       term.dispose();
     };
-  }, [sessionId, terminalThemeColors, preferences.fontSize, fitTerminal]);
+  }, [sessionId, course, experiment, terminalThemeColors, preferences.fontSize, fitTerminal, promptStr]);
 
   return {
     terminalRef,

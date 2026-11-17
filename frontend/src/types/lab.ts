@@ -18,6 +18,8 @@ export interface Experiment {
   sampleStarterCode?: string;
   solutionHint?: string;
   status: 'Ready' | 'In Progress' | 'Completed' | 'Pending';
+  initialExecutionCmd?: string;
+  initialExecutionOutput?: string;
 }
 
 export interface Course {

@@ -69,28 +69,37 @@ export default function SemesterLabsPage() {
         </div>
 
         {/* Active Session Banner */}
-        <div className="bg-white rounded-xl border border-blue-200 p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="space-y-0.5">
-            <span className="text-[11px] font-semibold text-slate-400">Active Session</span>
-            <div className="flex items-center gap-2.5">
-              <h3 className="text-base font-bold text-slate-900">
-                PCCSL407 Operating Systems Lab
-              </h3>
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                READY
-              </span>
-            </div>
-          </div>
+        {(() => {
+          const activeCourse = filteredCourses[0] || KTU_2024_CSE_COURSES.find(c => c.semester === selectedSemester);
+          if (!activeCourse) return null;
+          const targetExpId = activeCourse.experiments[0]?.id || `${activeCourse.code.toLowerCase()}-exp01`;
+          return (
+            <div className="bg-white rounded-xl border border-blue-200 p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="space-y-0.5">
+                <span className="text-[11px] font-semibold text-slate-400">
+                  {selectedSemester} Active Lab Session
+                </span>
+                <div className="flex items-center gap-2.5">
+                  <h3 className="text-base font-bold text-slate-900">
+                    {activeCourse.code} {activeCourse.title}
+                  </h3>
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                    READY
+                  </span>
+                </div>
+              </div>
 
-          <button
-            onClick={() => navigate('/workspace/s4-cse-os-lab')}
-            className="px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold shadow-md shadow-blue-600/20 flex items-center gap-1.5 transition-all"
-          >
-            <span>Resume Terminal</span>
-            <Terminal className="w-3 h-3" />
-          </button>
-        </div>
+              <button
+                onClick={() => navigate(`/workspace/${activeCourse.code.toLowerCase()}-${targetExpId}`)}
+                className="px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold shadow-md shadow-blue-600/20 flex items-center gap-1.5 transition-all cursor-pointer"
+              >
+                <span>Resume Terminal</span>
+                <Terminal className="w-3 h-3" />
+              </button>
+            </div>
+          );
+        })()}
 
         {/* Responsive Grid of Illustrated Lab Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -150,10 +159,10 @@ export default function SemesterLabsPage() {
 
                     <button
                       onClick={() => {
-                        const firstExpId = course.experiments[0]?.id || 'exp-04';
+                        const firstExpId = course.experiments[0]?.id || `${course.code.toLowerCase()}-exp01`;
                         navigate(`/labs/${course.code}/${firstExpId}`);
                       }}
-                      className="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 text-xs font-bold shadow-sm transition-colors"
+                      className="px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 text-xs font-bold shadow-sm transition-colors cursor-pointer"
                     >
                       Open Lab
                     </button>

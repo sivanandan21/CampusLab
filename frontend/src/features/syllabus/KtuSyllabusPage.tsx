@@ -138,7 +138,7 @@ export default function KtuSyllabusPage() {
               <div className="pt-3 border-t border-slate-100">
                 <button
                   onClick={() => {
-                    const firstExp = course.experiments[0]?.id || 'exp-04';
+                    const firstExp = course.experiments[0]?.id || `${course.code.toLowerCase()}-exp01`;
                     navigate(`/labs/${course.code}/${firstExp}`);
                   }}
                   className="w-full py-2 px-3 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold shadow-md shadow-blue-500/20 flex items-center justify-center gap-1.5 transition-colors"

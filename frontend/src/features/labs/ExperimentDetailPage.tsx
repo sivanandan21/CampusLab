@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -8,9 +8,9 @@ import {
   FileCode,
   UploadCloud,
   Check,
-  Paperclip,
   Cpu,
   Layers,
+  Sparkles,
 } from 'lucide-react';
 import Topbar from '../../components/Topbar';
 import { KTU_2024_CSE_COURSES } from '../../data/ktu2024CseLabs';
@@ -19,7 +19,7 @@ import { sessionService } from '../../services/sessionService';
 import { ASSETS } from '../../assets';
 
 export default function ExperimentDetailPage() {
-  const { courseId = 'PCCSL407', expId = 'exp-04' } = useParams();
+  const { courseId = 'PCCSL407', expId } = useParams();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -28,38 +28,31 @@ export default function ExperimentDetailPage() {
     KTU_2024_CSE_COURSES.find((c) => c.code === 'PCCSL407')!;
 
   const experiment =
-    course.experiments.find((e) => e.id === expId) ||
+    course.experiments.find((e) => e.id.toLowerCase() === (expId || '').toLowerCase()) ||
     course.experiments[0] || {
-      id: 'exp-04',
-      expNumber: 4,
-      title: 'Process Scheduling & Fork System Calls',
-      question:
-        'Write a C program using fork() to create a parent-child process tree and verify execution.',
+      id: `${course.code.toLowerCase()}-exp01`,
+      expNumber: 1,
+      title: course.title,
+      question: `Implement laboratory requirements for ${course.title}.`,
       durationMinutes: 45,
-      environment: 'Isolated Linux Container',
+      environment: 'Isolated Linux Sandbox',
       objectives: [
-        'Understand process creation using fork()',
-        'Practice process scheduling & system calls',
+        `Understand core principles of ${course.title}`,
+        'Implement solution following KTU 2024 Scheme specifications',
       ],
       practiceSkills: [
-        { name: 'C Programming', tag: 'POSIX', iconType: 'code' },
-        { name: 'fork()', tag: 'Syscall', iconType: 'fork' },
-        { name: 'Process Tree', tag: 'Tree', iconType: 'tree' },
+        { name: course.title, tag: 'KTU 2024', iconType: 'code' },
+        { name: 'Testing & Verification', tag: 'Lab', iconType: 'cpu' },
       ],
       checklistSteps: [
-        {
-          id: 's1',
-          stepNumber: 1,
-          label: 'Write C program for parent-child process creation',
-          completed: true,
-        },
-        { id: 's2', stepNumber: 2, label: 'Compile & debug using gcc', completed: true },
+        { id: 's1', stepNumber: 1, label: 'Design algorithm and implementation', completed: true },
+        { id: 's2', stepNumber: 2, label: 'Compile and debug', completed: true },
         { id: 's3', stepNumber: 3, label: 'Demonstrate output on terminal', completed: false },
       ],
       submissionRequirements: {
-        fileTypes: ['1 C file (.c)', 'Output screenshot (.png/.jpg)'],
-        description: 'Single .c file and terminal execution output screenshot',
-        acceptedFormats: '.c,.png,.jpg',
+        fileTypes: ['Source file', 'Output screenshot (.png/.jpg)'],
+        description: `Submission for ${course.code}`,
+        acceptedFormats: '*',
       },
       status: 'Ready' as const,
     };
@@ -68,6 +61,11 @@ export default function ExperimentDetailPage() {
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [provisionStep, setProvisionStep] = useState<'REQUESTED' | 'PROVISIONING' | 'READY'>('READY');
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+
+  useEffect(() => {
+    setChecklist(experiment.checklistSteps);
+    setUploadedFiles([]);
+  }, [experiment.id]);
 
   const toggleStep = (id: string) => {
     setChecklist((prev) =>
@@ -78,7 +76,7 @@ export default function ExperimentDetailPage() {
   const handleLaunch = async () => {
     setIsProvisioning(true);
     setProvisionStep('REQUESTED');
-    showToast('Requesting isolated container allocation...', 'info');
+    showToast(`Requesting isolated ${experiment.environment} allocation...`, 'info');
 
     setTimeout(() => {
       setProvisionStep('PROVISIONING');
@@ -88,14 +86,50 @@ export default function ExperimentDetailPage() {
       setProvisionStep('READY');
       await sessionService.startSession(course.code, experiment.id);
       setIsProvisioning(false);
-      navigate(`/workspace/s4-cse-os-lab`);
-    }, 1600);
+      navigate(`/workspace/${course.code.toLowerCase()}-${experiment.id}`);
+    }, 1500);
   };
 
   const handleDropUpload = (e: React.DragEvent) => {
     e.preventDefault();
-    setUploadedFiles(['process_tree.c', 'terminal_output.png']);
-    showToast('Files uploaded successfully for auto-check!');
+    const mockFile = experiment.submissionRequirements.fileTypes[0] || 'solution.txt';
+    setUploadedFiles([mockFile, 'execution_output.png']);
+    showToast('Files uploaded successfully for KTU auto-grader!');
+  };
+
+  const getSkillIcon = (skill: { name: string; tag: string; iconType: string }) => {
+    const n = skill.name.toLowerCase();
+    const t = skill.iconType?.toLowerCase() || '';
+
+    if (t === 'fork') {
+      return <img src={ASSETS.icons.fork} alt="fork" className="w-full h-full object-contain" />;
+    }
+    if (t === 'tree') {
+      return <img src={ASSETS.icons.tree} alt="tree" className="w-full h-full object-contain" />;
+    }
+    if (t === 'sql') {
+      return <img src={ASSETS.icons.sqlPreview} alt="sql" className="w-full h-full object-contain" />;
+    }
+    if (n.includes('c programming') || t === 'c') {
+      return <img src={ASSETS.icons.c} alt="C" className="w-full h-full object-contain" />;
+    }
+    if (t === 'python' || n.includes('python')) {
+      return (
+        <div className="w-full h-full bg-blue-600/10 text-blue-600 rounded flex items-center justify-center font-bold text-xs">
+          Py
+        </div>
+      );
+    }
+    if (t === 'cpu') {
+      return <Cpu className="w-5 h-5 text-indigo-500" />;
+    }
+    if (t === 'layers') {
+      return <Layers className="w-5 h-5 text-emerald-500" />;
+    }
+    if (t === 'terminal') {
+      return <Terminal className="w-5 h-5 text-amber-500" />;
+    }
+    return <FileCode className="w-5 h-5 text-blue-500" />;
   };
 
   return (
@@ -112,8 +146,12 @@ export default function ExperimentDetailPage() {
               </span>
 
               <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-tight">
-                Exp 0{experiment.expNumber}: {experiment.title}
+                Exp {experiment.expNumber.toString().padStart(2, '0')}: {experiment.title}
               </h2>
+
+              <p className="text-xs text-blue-100/90 leading-relaxed max-w-2xl">
+                {experiment.question}
+              </p>
 
               {/* Status and specs pills */}
               <div className="flex flex-wrap items-center gap-2 pt-0.5">
@@ -136,7 +174,7 @@ export default function ExperimentDetailPage() {
                 <button
                   onClick={handleLaunch}
                   disabled={isProvisioning}
-                  className="px-5 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs shadow-md shadow-blue-600/30 flex items-center gap-2 transition-all transform active:scale-95"
+                  className="px-5 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs shadow-md shadow-blue-600/30 flex items-center gap-2 transition-all transform active:scale-95 cursor-pointer"
                 >
                   <Play className="w-3.5 h-3.5 fill-white" />
                   <span>
@@ -150,15 +188,15 @@ export default function ExperimentDetailPage() {
               </div>
             </div>
 
-            {/* Right Side Linux Terminal & Process Tree Illustration */}
+            {/* Right Side Illustration Image */}
             <div className="lg:col-span-4 hidden lg:flex justify-end">
-              <div className="w-72 h-44 rounded-xl overflow-hidden shadow-2xl border border-blue-400/40 group">
+              <div className="w-72 h-44 rounded-xl overflow-hidden shadow-2xl border border-blue-400/40 group bg-slate-950">
                 <img
-                  src={ASSETS.illustrations.terminalProcessTree || ASSETS.icons.terminalTreeArt}
-                  alt="Process Tree Terminal Graphic"
+                  src={ASSETS.labs[course.code] || ASSETS.illustrations.dashboardOsHero}
+                  alt={course.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   onError={(e) => {
-                    e.currentTarget.src = ASSETS.icons.terminalTreeArt;
+                    e.currentTarget.src = ASSETS.illustrations.dashboardOsHero;
                   }}
                 />
               </div>
@@ -168,46 +206,48 @@ export default function ExperimentDetailPage() {
 
         {/* 3-Column Detail Cards Below */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Card 1: What You Will Practice with Real Image Icons */}
+          {/* Card 1: What You Will Practice with Real Domain Icons */}
           <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 sm:p-5 shadow-sm flex flex-col justify-between">
-            <h3 className="text-sm font-bold text-slate-900 mb-3">What You Will Practice</h3>
+            <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-blue-600" />
+              <span>What You Will Practice</span>
+            </h3>
 
             <div className="space-y-2.5">
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm">
-                    <img src={ASSETS.icons.c} alt="C Logo" className="w-full h-full object-contain" />
+              {experiment.practiceSkills.map((skill, sIdx) => (
+                <div
+                  key={sIdx}
+                  className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between hover:bg-blue-50/30 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm flex items-center justify-center bg-white p-0.5 border border-slate-200">
+                      {getSkillIcon(skill)}
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-slate-800 block leading-tight">
+                        {skill.name}
+                      </span>
+                      <span className="text-[10px] font-semibold text-slate-500">
+                        {skill.tag}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-xs font-bold text-slate-800">C Programming</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700">
+                    Core
+                  </span>
                 </div>
-                <FileCode className="w-4 h-4 text-blue-500" />
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm">
-                    <img src={ASSETS.icons.fork} alt="fork() Syscall" className="w-full h-full object-contain" />
-                  </div>
-                  <span className="text-xs font-bold text-slate-800">fork() System Call</span>
-                </div>
-                <Cpu className="w-4 h-4 text-indigo-500" />
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 shadow-sm">
-                    <img src={ASSETS.icons.tree} alt="Process Tree" className="w-full h-full object-contain" />
-                  </div>
-                  <span className="text-xs font-bold text-slate-800">Process Tree Hierarchy</span>
-                </div>
-                <Layers className="w-4 h-4 text-emerald-500" />
-              </div>
+              ))}
             </div>
           </div>
 
           {/* Card 2: Step-by-Step Checklist */}
           <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 sm:p-5 shadow-sm flex flex-col justify-between">
-            <h3 className="text-sm font-bold text-slate-900 mb-3">Step-by-Step Checklist</h3>
+            <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center justify-between">
+              <span>Step-by-Step Checklist</span>
+              <span className="text-xs font-semibold text-blue-600">
+                {checklist.filter((s) => s.completed).length}/{checklist.length} Done
+              </span>
+            </h3>
 
             <div className="space-y-2">
               {checklist.map((step) => (
@@ -245,34 +285,46 @@ export default function ExperimentDetailPage() {
             <h3 className="text-sm font-bold text-slate-900 mb-3">Submission Requirements</h3>
 
             <div className="space-y-2">
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center gap-2.5 text-xs font-semibold text-slate-700">
-                <UploadCloud className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                <span>1 C file (.c)</span>
-              </div>
+              {experiment.submissionRequirements.fileTypes.map((ft, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center gap-2.5 text-xs font-semibold text-slate-700"
+                >
+                  <UploadCloud className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <span>{ft}</span>
+                </div>
+              ))}
+            </div>
 
-              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex items-center gap-2.5 text-xs font-semibold text-slate-700">
-                <Paperclip className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                <span>Output screenshot (.png/.jpg)</span>
-              </div>
-
-              {/* Drag & Drop Upload Dropzone */}
-              <div
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={handleDropUpload}
-                onClick={() => {
-                  setUploadedFiles(['process_tree.c', 'output.png']);
-                  showToast('Files attached: process_tree.c, output.png');
-                }}
-                className="p-4 rounded-lg border-2 border-dashed border-slate-300 hover:border-blue-500 bg-slate-50 hover:bg-blue-50/30 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-0.5"
-              >
-                <UploadCloud className="w-5 h-5 text-slate-400 mb-0.5" />
-                <span className="text-xs font-bold text-slate-700">
-                  {uploadedFiles.length > 0
-                    ? `Attached (${uploadedFiles.join(', ')})`
-                    : 'Drag & Drop or Upload'}
-                </span>
-                <span className="text-[10px] text-slate-400">Click to select files</span>
-              </div>
+            {/* Drop / Upload Zone */}
+            <div
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={handleDropUpload}
+              onClick={() => {
+                const sampleName = experiment.submissionRequirements.fileTypes[0] || 'solution.py';
+                setUploadedFiles([sampleName, 'test_output.png']);
+                showToast('Files uploaded successfully for auto-check!');
+              }}
+              className="mt-3 border-2 border-dashed border-slate-200 hover:border-blue-400 rounded-xl p-3 text-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-blue-50/30"
+            >
+              {uploadedFiles.length > 0 ? (
+                <div className="space-y-1">
+                  <span className="text-xs font-bold text-emerald-600 flex items-center justify-center gap-1">
+                    <Check className="w-3.5 h-3.5" />
+                    Files Attached ({uploadedFiles.length})
+                  </span>
+                  <div className="text-[11px] text-slate-500 font-mono">
+                    {uploadedFiles.join(', ')}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="text-xs font-bold text-slate-700">Drag &amp; Drop or Upload</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">
+                    Formats: {experiment.submissionRequirements.acceptedFormats}
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
