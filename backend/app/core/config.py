@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     AWS_ACCESS_KEY_ID: Optional[str] = None
     AWS_SECRET_ACCESS_KEY: Optional[str] = None
     AWS_SESSION_TOKEN: Optional[str] = None
+    USE_LIVE_AWS: bool = Field(default=False, description="Enable real AWS S3 / CloudWatch calls using local credentials")
     S3_ARTIFACT_BUCKET: str = Field(default="campuslab-artifacts-ap-south-1")
     S3_ENDPOINT_URL: Optional[str] = Field(default=None, description="LocalStack or MinIO custom endpoint")
     CLOUDWATCH_NAMESPACE: str = Field(default="CampusLab/Pilot")

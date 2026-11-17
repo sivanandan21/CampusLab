@@ -20,11 +20,13 @@ class S3StorageService:
             config = Config(
                 region_name=self.region,
                 signature_version="s3v4",
+                s3={"addressing_style": "virtual"},
                 retries={"max_attempts": 3, "mode": "standard"},
             )
-            kwargs = {"config": config}
-            if self.endpoint_url:
-                kwargs["endpoint_url"] = self.endpoint_url
+            kwargs = {
+                "config": config,
+                "endpoint_url": self.endpoint_url or f"https://s3.{self.region}.amazonaws.com",
+            }
             if settings.AWS_ACCESS_KEY_ID and settings.AWS_SECRET_ACCESS_KEY:
                 kwargs["aws_access_key_id"] = settings.AWS_ACCESS_KEY_ID
                 kwargs["aws_secret_access_key"] = settings.AWS_SECRET_ACCESS_KEY
@@ -50,7 +52,13 @@ class S3StorageService:
         Enforces server-side encryption and metadata tags.
         """
         client = self._get_client()
-        if client is None or settings.APP_ENV == "development" and not settings.AWS_ACCESS_KEY_ID and not self.endpoint_url:
+        is_mock_env = (
+            settings.APP_ENV == "development"
+            and not settings.USE_LIVE_AWS
+            and not settings.AWS_ACCESS_KEY_ID
+            and not self.endpoint_url
+        )
+        if client is None or is_mock_env:
             # Local development mock presigned URL
             mock_url = f"http://localhost:8000/api/v1/mock-s3/upload/{s3_key}"
             return {
@@ -99,7 +107,13 @@ class S3StorageService:
     ) -> str:
         """Generate short-lived S3 Presigned GET URL for viewing or downloading submissions & PDF reports."""
         client = self._get_client()
-        if client is None or settings.APP_ENV == "development" and not settings.AWS_ACCESS_KEY_ID and not self.endpoint_url:
+        is_mock_env = (
+            settings.APP_ENV == "development"
+            and not settings.USE_LIVE_AWS
+            and not settings.AWS_ACCESS_KEY_ID
+            and not self.endpoint_url
+        )
+        if client is None or is_mock_env:
             return f"http://localhost:8000/api/v1/mock-s3/download/{s3_key}"
 
         params = {

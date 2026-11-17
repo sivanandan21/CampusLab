@@ -45,7 +45,7 @@ class CloudWatchMetricsService:
         self._client = None
 
     def _get_client(self):
-        if self._client is None and settings.APP_ENV in ("staging", "production"):
+        if self._client is None and (settings.APP_ENV in ("staging", "production") or settings.USE_LIVE_AWS):
             try:
                 self._client = boto3.client("cloudwatch", region_name=self.region)
             except Exception as e:
