@@ -46,35 +46,58 @@ async def login(req: LoginRequest, request: Request, db: AsyncSession = Depends(
             detail="Invalid admission number or password. Check credentials and retry.",
         )
 
+    # Snapshot user fields NOW before any audit write that could dirty the session
+    user_id_str = str(user.id)
+    user_adm = str(user.admission_number)
+    user_role = str(user.role)
+    user_name = str(user.name)
+    user_sem = str(user.current_semester)
+    user_dept = str(user.department)
+    user_college = str(user.college_id)
+    user_email = str(user.email)
+    user_ktu = str(user.ktu_reg_id) if user.ktu_reg_id else None
+    user_avatar = str(user.avatar_url) if user.avatar_url else None
+
     # Issue access token
     token = create_access_token(
         data={
-            "sub": str(user.id),
-            "admission_number": str(user.admission_number),
-            "role": str(user.role),
-            "name": str(user.name),
-            "semester": str(user.current_semester),
+            "sub": user_id_str,
+            "admission_number": user_adm,
+            "role": user_role,
+            "name": user_name,
+            "semester": user_sem,
         }
     )
 
-    try:
-        await audit_service.log_event(
-            db=db,
-            request_id="req-login-ok",
-            event_type="AUTH_SUCCESS",
-            user_id=user.id,
-            admission_number=user.admission_number,
-            ip_address=client_ip,
-            details={"role": user.role},
-        )
-    except Exception:
-        pass
-
-    return TokenResponse(
+    # Build response before audit (audit uses savepoint, failure is non-fatal)
+    response = TokenResponse(
         access_token=token,
         token_type="bearer",
-        user=UserResponse.model_validate(user),
+        user=UserResponse(
+            id=user_id_str,
+            admission_number=user_adm,
+            role=user_role,
+            name=user_name,
+            current_semester=user_sem,
+            department=user_dept,
+            college_id=user_college,
+            email=user_email,
+            ktu_reg_id=user_ktu,
+            avatar_url=user_avatar,
+        ),
     )
+
+    await audit_service.log_event(
+        db=db,
+        request_id="req-login-ok",
+        event_type="AUTH_SUCCESS",
+        user_id=user_id_str,
+        admission_number=user_adm,
+        ip_address=client_ip,
+        details={"role": user_role},
+    )
+
+    return response
 
 
 @router.post("/logout")
