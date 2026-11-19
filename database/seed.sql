@@ -28,7 +28,7 @@ ON CONFLICT (hostname) DO NOTHING;
 
 -- 4. COURSES & EXPERIMENTS
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('3595b96e-fb6e-5da1-864e-52d0c3c48287', 'UCEST105', 'Algorithmic Thinking with Python', 'S1'::semester_enum, 2, '0-0-2-0', 'CIA 50 / ESE 50', 'ESC Practical', 'Foundations of computational problem solving using Python. Data types, loops, functions, file handling, and modular programming.', '["Computational Logic & Flowcharts", "Control Flow & Nested Loops", "Lists, Dictionaries & Tuples", "File Processing & Modules"]'::jsonb, 'UCEST105')
+VALUES ('3595b96e-fb6e-5da1-864e-52d0c3c48287', 'UCEST105', 'Algorithmic Thinking with Python', 'S1'::semester_enum, 2, '0-0-2-0', 'CIA 50 / ESE 50', 'ESC Practical'::course_category_enum, 'Foundations of computational problem solving using Python. Data types, loops, functions, file handling, and modular programming.', '["Computational Logic & Flowcharts", "Control Flow & Nested Loops", "Lists, Dictionaries & Tuples", "File Processing & Modules"]'::jsonb, 'UCEST105')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -136,7 +136,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('3520ebf6-687a-582e-a5fc-f6d080eb47f4', 'GXESL106', 'Basic Electrical & Electronics Engineering Workshop', 'S1'::semester_enum, 1, '0-0-2-0', 'CIA 50 / ESE 50', 'ESC Practical', 'Hands-on training in basic electrical wiring, electronic soldering, circuit breadboarding, measuring instruments, and component testing.', '["Staircase & Godown Wiring", "Soldering Practice & PCB", "Multimeter & CRO Operation", "Electronic Component Testing"]'::jsonb, 'GXESL106')
+VALUES ('3520ebf6-687a-582e-a5fc-f6d080eb47f4', 'GXESL106', 'Basic Electrical & Electronics Engineering Workshop', 'S1'::semester_enum, 1, '0-0-2-0', 'CIA 50 / ESE 50', 'ESC Practical'::course_category_enum, 'Hands-on training in basic electrical wiring, electronic soldering, circuit breadboarding, measuring instruments, and component testing.', '["Staircase & Godown Wiring", "Soldering Practice & PCB", "Multimeter & CRO Operation", "Electronic Component Testing"]'::jsonb, 'GXESL106')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -231,7 +231,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('e412ae58-0a0d-54aa-b1a9-ffd6245945ff', 'GXEST204', 'Programming in C', 'S2'::semester_enum, 2, '0-0-2-0', 'CIA 50 / ESE 50', 'ESC Practical', 'Low-level imperative programming with C. Pointers, memory allocation, structures, bitwise manipulation, and standard libraries.', '["Pointers & Dynamic Memory", "Structures & Unions", "File Handling & Streams", "Command-Line Arguments"]'::jsonb, 'GXEST204')
+VALUES ('e412ae58-0a0d-54aa-b1a9-ffd6245945ff', 'GXEST204', 'Programming in C', 'S2'::semester_enum, 2, '0-0-2-0', 'CIA 50 / ESE 50', 'ESC Practical'::course_category_enum, 'Low-level imperative programming with C. Pointers, memory allocation, structures, bitwise manipulation, and standard libraries.', '["Pointers & Dynamic Memory", "Structures & Unions", "File Handling & Streams", "Command-Line Arguments"]'::jsonb, 'GXEST204')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -339,7 +339,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('1ed87b66-9de3-55ea-b148-a82cc5ec3ce7', 'GXESL208', 'IT Workshop', 'S2'::semester_enum, 1, '0-0-2-0', 'CIA 50 / ESE 50', 'ESC Practical', 'PC hardware diagnostics, Linux CLI mastery, Git version control, bash scripting, and software deployment pipelines.', '["Hardware Disassembly & Assembly", "Linux Shell & Command Mastery", "Git Version Control & Branching", "Bash Shell Scripting"]'::jsonb, 'GXESL208')
+VALUES ('1ed87b66-9de3-55ea-b148-a82cc5ec3ce7', 'GXESL208', 'IT Workshop', 'S2'::semester_enum, 1, '0-0-2-0', 'CIA 50 / ESE 50', 'ESC Practical'::course_category_enum, 'PC hardware diagnostics, Linux CLI mastery, Git version control, bash scripting, and software deployment pipelines.', '["Hardware Disassembly & Assembly", "Linux Shell & Command Mastery", "Git Version Control & Branching", "Bash Shell Scripting"]'::jsonb, 'GXESL208')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -447,7 +447,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('b486b332-cba4-5c18-8320-cc6bdda01e38', 'PCCSL307', 'Data Structures Lab', 'S3'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical', 'Implementation and analysis of fundamental linear and non-linear data structures: Linked Lists, Stacks, Queues, Trees, and Graphs in C.', '["Sparse Polynomials & Arrays", "Stack Infix/Postfix & Queues", "Singly & Doubly Linked Lists", "BST, Graphs & Sorting (Quick/Merge)"]'::jsonb, 'PCCSL307')
+VALUES ('b486b332-cba4-5c18-8320-cc6bdda01e38', 'PCCSL307', 'Data Structures Lab', 'S3'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical'::course_category_enum, 'Implementation and analysis of fundamental linear and non-linear data structures: Linked Lists, Stacks, Queues, Trees, and Graphs in C.', '["Sparse Polynomials & Arrays", "Stack Infix/Postfix & Queues", "Singly & Doubly Linked Lists", "BST, Graphs & Sorting (Quick/Merge)"]'::jsonb, 'PCCSL307')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -581,7 +581,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('47d18281-1cf7-5227-9bae-6f2d52dbd7d5', 'PCCSL308', 'Digital Lab', 'S3'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical', 'Design, realization, and verification of combinational and sequential digital circuits using discrete logic ICs and simulation tools.', '["Logic Gates & De Morgan Realization", "Adders, Subtractors & Code Converters", "Multiplexers & Decoders", "Flip-Flops, Shift Registers & Counters"]'::jsonb, 'PCCSL308')
+VALUES ('47d18281-1cf7-5227-9bae-6f2d52dbd7d5', 'PCCSL308', 'Digital Lab', 'S3'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical'::course_category_enum, 'Design, realization, and verification of combinational and sequential digital circuits using discrete logic ICs and simulation tools.', '["Logic Gates & De Morgan Realization", "Adders, Subtractors & Code Converters", "Multiplexers & Decoders", "Flip-Flops, Shift Registers & Counters"]'::jsonb, 'PCCSL308')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -689,7 +689,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('e9408a52-97fb-517c-b0d7-58529f7fcb83', 'PBCST304', 'Object Oriented Programming', 'S3'::semester_enum, 4, '3-0-0-1', 'CIA 50 / ESE 50', 'PC-PBL', 'Object-Oriented Analysis, Design, and Programming using Java. Classes, inheritance, polymorphism, abstract classes, interfaces, multithreading, and GUI basics.', '["Classes, Objects & Constructors", "Inheritance, Polymorphism & Interfaces", "Exception Handling & Multi-threading", "Java Generics, Collections & Streams"]'::jsonb, 'PBCST304')
+VALUES ('e9408a52-97fb-517c-b0d7-58529f7fcb83', 'PBCST304', 'Object Oriented Programming', 'S3'::semester_enum, 4, '3-0-0-1', 'CIA 50 / ESE 50', 'PC-PBL'::course_category_enum, 'Object-Oriented Analysis, Design, and Programming using Java. Classes, inheritance, polymorphism, abstract classes, interfaces, multithreading, and GUI basics.', '["Classes, Objects & Constructors", "Inheritance, Polymorphism & Interfaces", "Exception Handling & Multi-threading", "Java Generics, Collections & Streams"]'::jsonb, 'PBCST304')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -771,7 +771,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('d9dc8eb0-b34d-5ae9-a0d2-0b97da789028', 'PCCSL407', 'Operating Systems Lab', 'S4'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical', 'System calls, process scheduling algorithms, IPC (pipes, shared memory), semaphores, deadlock handling, memory allocation, and page replacement.', '["Process Creation & fork()", "CPU Scheduling Algorithms", "Semaphores & IPC", "Memory Management (Paging)"]'::jsonb, 'PCCSL407')
+VALUES ('d9dc8eb0-b34d-5ae9-a0d2-0b97da789028', 'PCCSL407', 'Operating Systems Lab', 'S4'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical'::course_category_enum, 'System calls, process scheduling algorithms, IPC (pipes, shared memory), semaphores, deadlock handling, memory allocation, and page replacement.', '["Process Creation & fork()", "CPU Scheduling Algorithms", "Semaphores & IPC", "Memory Management (Paging)"]'::jsonb, 'PCCSL407')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -892,7 +892,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('725821bf-0039-5e71-a885-cd08b831b443', 'PCCSL408', 'Database Management Systems Lab', 'S4'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical', 'Relational database design, DDL/DML, complex SQL queries, views, triggers, stored procedures, transactions, and full-stack DB integration.', '["ER Modeling & Schema Design", "SQL Joins, Views & Subqueries", "Triggers & Functions", "PL/SQL Programming"]'::jsonb, 'PCCSL408')
+VALUES ('725821bf-0039-5e71-a885-cd08b831b443', 'PCCSL408', 'Database Management Systems Lab', 'S4'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical'::course_category_enum, 'Relational database design, DDL/DML, complex SQL queries, views, triggers, stored procedures, transactions, and full-stack DB integration.', '["ER Modeling & Schema Design", "SQL Joins, Views & Subqueries", "Triggers & Functions", "PL/SQL Programming"]'::jsonb, 'PCCSL408')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1013,7 +1013,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('ee2c5832-2915-52c4-8972-28a58b7e6ec8', 'PBCST404', 'Computer Organization & Architecture', 'S4'::semester_enum, 4, '3-0-0-1', 'CIA 50 / ESE 50', 'PC-PBL', 'Functional units, CPU datapath, control unit design, ALU modeling, pipeline hazard detection, cache memory mapping, and RISC-V assembly simulation.', '["Basic Functional Units", "Processor & Control Unit", "Memory System & Cache", "Input/Output Organization"]'::jsonb, 'PBCST404')
+VALUES ('ee2c5832-2915-52c4-8972-28a58b7e6ec8', 'PBCST404', 'Computer Organization & Architecture', 'S4'::semester_enum, 4, '3-0-0-1', 'CIA 50 / ESE 50', 'PC-PBL'::course_category_enum, 'Functional units, CPU datapath, control unit design, ALU modeling, pipeline hazard detection, cache memory mapping, and RISC-V assembly simulation.', '["Basic Functional Units", "Processor & Control Unit", "Memory System & Cache", "Input/Output Organization"]'::jsonb, 'PBCST404')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1082,7 +1082,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('0274e59b-faac-5420-a3ee-239538a4f14d', 'PCCSL507', 'Networks Lab', 'S5'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical', 'Network commands, socket programming (TCP & UDP), client-server communication, simulation of sliding window, routing algorithms, and packet capture.', '["Linux Network Diagnostic & Packet Capture", "TCP Client-Server Socket Programming", "UDP Client-Server Socket Programming", "Sliding Window & Routing (Bellman-Ford)"]'::jsonb, 'PCCSL507')
+VALUES ('0274e59b-faac-5420-a3ee-239538a4f14d', 'PCCSL507', 'Networks Lab', 'S5'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical'::course_category_enum, 'Network commands, socket programming (TCP & UDP), client-server communication, simulation of sliding window, routing algorithms, and packet capture.', '["Linux Network Diagnostic & Packet Capture", "TCP Client-Server Socket Programming", "UDP Client-Server Socket Programming", "Sliding Window & Routing (Bellman-Ford)"]'::jsonb, 'PCCSL507')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1190,7 +1190,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('b7e8e2b1-4b1e-5c94-ad1a-cd44712bc068', 'PCCSL508', 'Machine Learning Lab', 'S5'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical', 'Implementation of ML algorithms using Python, NumPy, Pandas, Scikit-learn, and PyTorch: Regression, Classification, Clustering, and Neural Networks.', '["Data Preprocessing & Feature Engineering", "Linear & Logistic Regression", "Decision Trees, Random Forest & SVM", "K-Means Clustering & PCA", "Multi-Layer Perceptron (PyTorch)"]'::jsonb, 'PCCSL508')
+VALUES ('b7e8e2b1-4b1e-5c94-ad1a-cd44712bc068', 'PCCSL508', 'Machine Learning Lab', 'S5'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical'::course_category_enum, 'Implementation of ML algorithms using Python, NumPy, Pandas, Scikit-learn, and PyTorch: Regression, Classification, Clustering, and Neural Networks.', '["Data Preprocessing & Feature Engineering", "Linear & Logistic Regression", "Decision Trees, Random Forest & SVM", "K-Means Clustering & PCA", "Multi-Layer Perceptron (PyTorch)"]'::jsonb, 'PCCSL508')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1298,7 +1298,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('af81d2db-867a-5ff2-bd9a-719bfd9eccba', 'PBCST504', 'Microcontrollers', 'S5'::semester_enum, 4, '3-0-0-1', 'CIA 50 / ESE 50', 'PC-PBL', 'Architecture and assembly/C programming of ARM Cortex-M / 8051 microcontrollers. GPIO, timers, interrupts, ADC, DAC, and serial communication interfacing.', '["ARM Cortex Architecture & Registers", "Embedded C & GPIO Interfacing", "Timers, Counters & PWM Generation", "Interrupt Service Routines & ADC/DAC", "Serial Protocols (UART, SPI, I2C)"]'::jsonb, 'PBCST504')
+VALUES ('af81d2db-867a-5ff2-bd9a-719bfd9eccba', 'PBCST504', 'Microcontrollers', 'S5'::semester_enum, 4, '3-0-0-1', 'CIA 50 / ESE 50', 'PC-PBL'::course_category_enum, 'Architecture and assembly/C programming of ARM Cortex-M / 8051 microcontrollers. GPIO, timers, interrupts, ADC, DAC, and serial communication interfacing.', '["ARM Cortex Architecture & Registers", "Embedded C & GPIO Interfacing", "Timers, Counters & PWM Generation", "Interrupt Service Routines & ADC/DAC", "Serial Protocols (UART, SPI, I2C)"]'::jsonb, 'PBCST504')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1380,7 +1380,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('20ab56dd-1bf6-56f4-b60f-cea42e76238e', 'PCCSL607', 'Systems Lab', 'S6'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical', 'Design and implementation of language processors: Lexical analyzers using Lex, Parsers using Yacc, Intermediate code generators, Assemblers, and Loaders.', '["Lexical Analyzer Generation using Lex", "Syntax Analyzer using Yacc", "Two-Pass Assembler & Macro Processor", "Absolute & Relocating Loaders"]'::jsonb, 'PCCSL607')
+VALUES ('20ab56dd-1bf6-56f4-b60f-cea42e76238e', 'PCCSL607', 'Systems Lab', 'S6'::semester_enum, 2, '0-0-3-0', 'CIA 50 / ESE 50', 'PC Practical'::course_category_enum, 'Design and implementation of language processors: Lexical analyzers using Lex, Parsers using Yacc, Intermediate code generators, Assemblers, and Loaders.', '["Lexical Analyzer Generation using Lex", "Syntax Analyzer using Yacc", "Two-Pass Assembler & Macro Processor", "Absolute & Relocating Loaders"]'::jsonb, 'PCCSL607')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1488,7 +1488,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('492b9761-1a3c-5682-93e0-b21bec881aa0', 'PBCST604', 'Fundamentals of Cyber Security', 'S6'::semester_enum, 4, '3-0-0-1', 'CIA 50 / ESE 50', 'PC-PBL', 'Cryptographic algorithms, symmetric/asymmetric encryption, hashing, authentication, network vulnerability assessment, packet sniffing, and secure coding.', '["Classical & Modern Cryptography (DES/AES)", "Public-Key Infrastructure & RSA/ECC", "Cryptographic Hashes & Digital Signatures", "Vulnerability Audits, Sniffing & Firewalls"]'::jsonb, 'PBCST604')
+VALUES ('492b9761-1a3c-5682-93e0-b21bec881aa0', 'PBCST604', 'Fundamentals of Cyber Security', 'S6'::semester_enum, 4, '3-0-0-1', 'CIA 50 / ESE 50', 'PC-PBL'::course_category_enum, 'Cryptographic algorithms, symmetric/asymmetric encryption, hashing, authentication, network vulnerability assessment, packet sniffing, and secure coding.', '["Classical & Modern Cryptography (DES/AES)", "Public-Key Infrastructure & RSA/ECC", "Cryptographic Hashes & Digital Signatures", "Vulnerability Audits, Sniffing & Firewalls"]'::jsonb, 'PBCST604')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1557,7 +1557,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('7bc733b7-4753-520a-aaff-f6aea070c259', 'PCCSP608', 'Mini Project: Socially Relevant Project', 'S6'::semester_enum, 2, '0-0-0-3', 'CIA 50 / ESE 50', 'Project', 'Team-based design and implementation of a socially relevant software engineering solution solving problems in agriculture, healthcare, or education.', '["Problem Identification & Feasibility Study", "System Requirements Specification (SRS)", "Architectural & Database Design", "Implementation, Testing & Community Pilot"]'::jsonb, 'PCCSP608')
+VALUES ('7bc733b7-4753-520a-aaff-f6aea070c259', 'PCCSP608', 'Mini Project: Socially Relevant Project', 'S6'::semester_enum, 2, '0-0-0-3', 'CIA 50 / ESE 50', 'Project'::course_category_enum, 'Team-based design and implementation of a socially relevant software engineering solution solving problems in agriculture, healthcare, or education.', '["Problem Identification & Feasibility Study", "System Requirements Specification (SRS)", "Architectural & Database Design", "Implementation, Testing & Community Pilot"]'::jsonb, 'PCCSP608')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1665,7 +1665,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('a6609f7e-68b0-5599-9955-169d592fc978', 'PCCSS705', 'Seminar', 'S7'::semester_enum, 2, '0-0-3-0', 'CIA 100', 'Seminar', 'Survey of modern research literature from IEEE, ACM, or Springer. Preparation of formal technical seminar report in LaTeX and technical presentation.', '["Literature Survey & Paper Selection", "Technical Synthesis & Report Writing (LaTeX)", "Slide Preparation & Presentation Skills", "Viva-Voce & Discussion Defense"]'::jsonb, 'PCCSS705')
+VALUES ('a6609f7e-68b0-5599-9955-169d592fc978', 'PCCSS705', 'Seminar', 'S7'::semester_enum, 2, '0-0-3-0', 'CIA 100', 'Seminar'::course_category_enum, 'Survey of modern research literature from IEEE, ACM, or Springer. Preparation of formal technical seminar report in LaTeX and technical presentation.', '["Literature Survey & Paper Selection", "Technical Synthesis & Report Writing (LaTeX)", "Slide Preparation & Presentation Skills", "Viva-Voce & Discussion Defense"]'::jsonb, 'PCCSS705')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1721,7 +1721,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('271c49ab-45d7-55ee-b548-a509d9508796', 'PCCSP706', 'Major Project Phase I / Internship', 'S7'::semester_enum, 4, '0-0-0-8', 'CIA 100', 'Project', 'Phase I of capstone engineering project or 6-month industry internship: Literature review, problem formulation, SRS, system architecture design, and initial prototype.', '["Problem Statement & Novelty Statement", "SRS & High-Level Architectural Design", "Prototype Development & Proof of Concept", "Phase I Progress Defense & Review Evaluation"]'::jsonb, 'PCCSP706')
+VALUES ('271c49ab-45d7-55ee-b548-a509d9508796', 'PCCSP706', 'Major Project Phase I / Internship', 'S7'::semester_enum, 4, '0-0-0-8', 'CIA 100', 'Project'::course_category_enum, 'Phase I of capstone engineering project or 6-month industry internship: Literature review, problem formulation, SRS, system architecture design, and initial prototype.', '["Problem Statement & Novelty Statement", "SRS & High-Level Architectural Design", "Prototype Development & Proof of Concept", "Phase I Progress Defense & Review Evaluation"]'::jsonb, 'PCCSP706')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (
@@ -1803,7 +1803,7 @@ VALUES (
 ON CONFLICT (course_id, exp_slug) DO UPDATE SET title = EXCLUDED.title, question = EXCLUDED.question;
 
 INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)
-VALUES ('3aff2fa7-ee17-532c-b9d6-25987d84fac1', 'PCCSP806', 'Major Project Phase II / Internship', 'S8'::semester_enum, 4, '0-0-0-8', 'CIA 70 / ESE 30', 'Project', 'Phase II full product deployment, comprehensive integration testing, performance benchmarking, research publication draft, and final viva-voce thesis defense.', '["Full-System Integration & Optimization", "Performance Benchmarking & Security Audits", "Research Paper Draft / Patent Filing", "Final Thesis Defense & Demonstration"]'::jsonb, 'PCCSP806')
+VALUES ('3aff2fa7-ee17-532c-b9d6-25987d84fac1', 'PCCSP806', 'Major Project Phase II / Internship', 'S8'::semester_enum, 4, '0-0-0-8', 'CIA 70 / ESE 30', 'Project'::course_category_enum, 'Phase II full product deployment, comprehensive integration testing, performance benchmarking, research publication draft, and final viva-voce thesis defense.', '["Full-System Integration & Optimization", "Performance Benchmarking & Security Audits", "Research Paper Draft / Patent Filing", "Final Thesis Defense & Demonstration"]'::jsonb, 'PCCSP806')
 ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;
 
 INSERT INTO experiments (

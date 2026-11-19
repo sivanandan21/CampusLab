@@ -110,7 +110,7 @@ def main():
         topics_j = json.dumps(c.get("topics", []))
         lines.append(
             f"INSERT INTO courses (id, code, title, semester, credits, ltpr, evaluation, category, description, topics_json, image_key)\n"
-            f"VALUES ({sql_escape(c_id)}, {sql_escape(c['code'])}, {sql_escape(c['title'])}, {sql_escape(c['semester'])}::semester_enum, {c['credits']}, {sql_escape(c['ltpr'])}, {sql_escape(c['evaluation'])}, {sql_escape(c['category'])}, {sql_escape(c['description'])}, {sql_escape(topics_j)}::jsonb, {sql_escape(c['code'])})\n"
+            f"VALUES ({sql_escape(c_id)}, {sql_escape(c['code'])}, {sql_escape(c['title'])}, {sql_escape(c['semester'])}::semester_enum, {c['credits']}, {sql_escape(c['ltpr'])}, {sql_escape(c['evaluation'])}, {sql_escape(c['category'])}::course_category_enum, {sql_escape(c['description'])}, {sql_escape(topics_j)}::jsonb, {sql_escape(c['code'])})\n"
             f"ON CONFLICT (code) DO UPDATE SET title = EXCLUDED.title, description = EXCLUDED.description;\n"
         )
 
