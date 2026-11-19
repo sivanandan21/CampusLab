@@ -40,8 +40,8 @@ async def create_or_resume_session(
         session = await session_service.create_or_resume_session(
             db=db,
             user=user,
-            course_code=req.course_code.upper(),
-            experiment_slug=req.experiment_id.lower(),
+            course_code=req.target_course_code,
+            experiment_slug=req.target_experiment_id,
             idempotency_key=key,
             request_id="req-alloc-session",
         )
@@ -55,10 +55,10 @@ async def create_or_resume_session(
     ws_url = f"/api/v1/terminal/ws?session_id={session.id}&token={session.pty_token}"
 
     return SessionResponse(
-        id=session.id,
-        user_id=session.user_id,
-        course_code=req.course_code.upper(),
-        experiment_id=req.experiment_id.lower(),
+        id=str(session.id),
+        user_id=str(session.user_id),
+        course_code=req.target_course_code,
+        experiment_id=req.target_experiment_id,
         status=session.status,
         container_id=session.container_id,
         pty_token=session.pty_token,
@@ -74,11 +74,13 @@ async def get_active_session(
     user: User = Depends(get_current_user),
 ):
     """Return currently active student lab session if one exists."""
+    from sqlalchemy import cast, String as SAString
+
     stmt = (
         select(LabSession)
         .where(
             LabSession.user_id == user.id,
-            LabSession.status.in_(["PROVISIONING", "READY", "RUNNING"]),
+            cast(LabSession.status, SAString).in_(["PROVISIONING", "READY", "RUNNING"]),
         )
         .order_by(LabSession.created_at.desc())
     )
@@ -97,8 +99,8 @@ async def get_active_session(
     ws_url = f"/api/v1/terminal/ws?session_id={session.id}&token={session.pty_token}"
 
     return SessionResponse(
-        id=session.id,
-        user_id=session.user_id,
+        id=str(session.id),
+        user_id=str(session.user_id),
         course_code=course_code,
         experiment_id=exp_slug,
         status=session.status,

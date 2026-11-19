@@ -72,6 +72,7 @@ async def login(req: LoginRequest, request: Request, db: AsyncSession = Depends(
     # Build response before audit (audit uses savepoint, failure is non-fatal)
     response = TokenResponse(
         access_token=token,
+        token=token,
         token_type="bearer",
         user=UserResponse(
             id=user_id_str,

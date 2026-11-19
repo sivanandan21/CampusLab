@@ -80,13 +80,25 @@ async def submit_experiment(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    rubric = json.loads(submission.rubric_breakdown_json) if submission.rubric_breakdown_json else {}
-    manifest = json.loads(submission.artifact_manifest_json) if submission.artifact_manifest_json else []
+    def _parse_json(val, default):
+        if val is None:
+            return default
+        if isinstance(val, (dict, list)):
+            return val
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return default
+        return default
+
+    rubric = _parse_json(submission.rubric_breakdown_json, {})
+    manifest = _parse_json(submission.artifact_manifest_json, [])
 
     return SubmissionResponse(
-        id=submission.id,
-        user_id=submission.user_id,
-        experiment_id=req.experiment_id,
+        id=str(submission.id),
+        user_id=str(submission.user_id),
+        experiment_id=str(submission.experiment_id),
         course_code=req.course_code.upper(),
         status=submission.status,
         score=submission.score,
@@ -107,6 +119,18 @@ async def list_student_submissions(
     user: User = Depends(get_current_user),
 ):
     """List lab submissions for active student."""
+    def _parse_json(val, default):
+        if val is None:
+            return default
+        if isinstance(val, (dict, list)):
+            return val
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return default
+        return default
+
     stmt = (
         select(Submission)
         .where(Submission.user_id == user.id)
@@ -117,17 +141,17 @@ async def list_student_submissions(
 
     resp = []
     for s in submissions:
-        rubric = json.loads(s.rubric_breakdown_json) if s.rubric_breakdown_json else {}
-        manifest = json.loads(s.artifact_manifest_json) if s.artifact_manifest_json else []
+        rubric = _parse_json(s.rubric_breakdown_json, {})
+        manifest = _parse_json(s.artifact_manifest_json, [])
         course_stmt = select(Course).where(Course.id == s.course_id)
         course = (await db.execute(course_stmt)).scalar_one_or_none()
         c_code = course.code if course else "PCCSL407"
 
         resp.append(
             SubmissionResponse(
-                id=s.id,
-                user_id=s.user_id,
-                experiment_id=s.experiment_id,
+                id=str(s.id),
+                user_id=str(s.user_id),
+                experiment_id=str(s.experiment_id),
                 course_code=c_code,
                 status=s.status,
                 score=s.score,

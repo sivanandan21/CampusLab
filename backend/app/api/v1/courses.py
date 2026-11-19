@@ -15,7 +15,19 @@ router = APIRouter(prefix="/courses", tags=["Courses"])
 
 
 def _map_course_to_response(c: Course) -> CourseResponse:
-    topics = json.loads(c.topics_json) if c.topics_json else []
+    def _parse_json(val, default):
+        if val is None:
+            return default
+        if isinstance(val, (list, dict)):
+            return val
+        if isinstance(val, str):
+            try:
+                return json.loads(val)
+            except Exception:
+                return default
+        return default
+
+    topics = _parse_json(c.topics_json, [])
     experiments_list = []
     completed_count = 0
 
@@ -24,17 +36,17 @@ def _map_course_to_response(c: Course) -> CourseResponse:
             completed_count += 1
         experiments_list.append(
             ExperimentResponse(
-                id=exp.id,
+                id=str(exp.id),
                 expSlug=exp.exp_slug,
                 expNumber=exp.exp_number,
                 title=exp.title,
                 question=exp.question,
                 durationMinutes=exp.duration_minutes,
                 environment=exp.environment,
-                objectives=json.loads(exp.objectives_json) if exp.objectives_json else [],
-                practiceSkills=json.loads(exp.practice_skills_json) if exp.practice_skills_json else [],
-                checklistSteps=json.loads(exp.checklist_steps_json) if exp.checklist_steps_json else [],
-                submissionRequirements=json.loads(exp.submission_requirements_json) if exp.submission_requirements_json else {},
+                objectives=_parse_json(exp.objectives_json, []),
+                practiceSkills=_parse_json(exp.practice_skills_json, []),
+                checklistSteps=_parse_json(exp.checklist_steps_json, []),
+                submissionRequirements=_parse_json(exp.submission_requirements_json, {}),
                 sampleStarterCode=exp.sample_starter_code,
                 solutionHint=exp.solution_hint,
                 initialCmd=exp.initial_cmd,
@@ -47,7 +59,7 @@ def _map_course_to_response(c: Course) -> CourseResponse:
     progress_pct = int((completed_count / exp_count) * 100) if exp_count > 0 else 0
 
     return CourseResponse(
-        id=c.id,
+        id=str(c.id),
         code=c.code,
         title=c.title,
         semester=c.semester,

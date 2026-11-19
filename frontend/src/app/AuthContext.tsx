@@ -38,10 +38,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsLoading(true);
     try {
       const res = await authService.login(admissionNo, pass);
+      const authToken = res.token || (res as any).access_token;
       setUser(res.user);
-      setToken(res.token);
+      setToken(authToken);
       localStorage.setItem('campuslab_user', JSON.stringify(res.user));
-      localStorage.setItem('campuslab_token', res.token);
+      localStorage.setItem('campuslab_token', authToken);
     } finally {
       setIsLoading(false);
     }

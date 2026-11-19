@@ -8,7 +8,10 @@ export const authService = {
       return mockApi.login(admissionNo, password);
     }
     const response = await apiClient.post('/auth/login', { admissionNo, password });
-    return response.data;
+    return {
+      user: response.data.user,
+      token: response.data.token || response.data.access_token,
+    };
   },
 
   async getCurrentUser(): Promise<User> {

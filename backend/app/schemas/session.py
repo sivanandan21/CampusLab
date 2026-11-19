@@ -1,6 +1,6 @@
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class SessionCreateRequest(BaseModel):
@@ -30,6 +30,11 @@ class SessionResponse(BaseModel):
     expires_at: datetime
     created_at: datetime
     ws_url: str
+
+    @field_validator("id", "user_id", mode="before")
+    @classmethod
+    def coerce_to_str(cls, v):
+        return str(v) if v is not None else v
 
     class Config:
         from_attributes = True

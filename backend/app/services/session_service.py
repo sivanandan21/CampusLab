@@ -4,7 +4,7 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, cast, String as SAString
 
 from ..models.session import LabSession
 from ..models.course import Course
@@ -65,7 +65,7 @@ class SessionService:
             and_(
                 LabSession.user_id == user.id,
                 LabSession.experiment_id == experiment.id,
-                LabSession.status.in_(["READY", "RUNNING", "PROVISIONING"]),
+                cast(LabSession.status, SAString).in_(["READY", "RUNNING", "PROVISIONING"]),
                 LabSession.expires_at > now,
             )
         )
@@ -83,7 +83,7 @@ class SessionService:
         worker_id = worker.id if worker else None
 
         # Create session record in REQUESTED status
-        session_id = str(uuid.uuid4())
+        session_id = uuid.uuid4()
         pty_token = secrets.token_urlsafe(32)
         expires_at = now + timedelta(minutes=settings.SESSION_TTL_MINUTES)
 
@@ -107,7 +107,7 @@ class SessionService:
         await db.flush()
 
         cont_info = await worker_client.create_container(
-            session_id=session_id,
+            session_id=str(session_id),
             user_admission_number=user.admission_number,
             course_code=course.code,
             experiment_slug=experiment.exp_slug,
