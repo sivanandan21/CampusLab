@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from datetime import datetime, timezone
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, cast, String
 from ..core.database import AsyncSessionLocal
 from ..models.session import LabSession
 from ..models.worker import WorkerNode
@@ -22,7 +22,7 @@ async def run_ttl_sweeper(interval_seconds: int = 60):
                 now = datetime.now(timezone.utc)
                 stmt = select(LabSession).where(
                     and_(
-                        LabSession.status.in_(["READY", "RUNNING", "PROVISIONING"]),
+                        cast(LabSession.status, String).in_(["READY", "RUNNING", "PROVISIONING"]),
                         LabSession.expires_at <= now,
                     )
                 )

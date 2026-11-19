@@ -30,30 +30,31 @@ async def lifespan(app: FastAPI):
     # Auto-seed database if empty (useful for local development)
     try:
         async with AsyncSessionLocal() as session:
-            from sqlalchemy import select
+            from sqlalchemy import select, text
             from .models.user import User
             existing_user = (await session.execute(select(User))).scalars().first()
             if not existing_user:
-                logger.info("Database appears unseeded. Seeding demo KTU 2024 Scheme users...")
-                from database.seed_ktu_2024_cse import DEMO_USERS, hash_password
-                for u in DEMO_USERS:
-                    user_obj = User(
-                        id=u["id"],
-                        admission_number=u["admission_number"],
-                        ktu_reg_id=u["ktu_reg_id"],
-                        email=u["email"],
-                        hashed_password=hash_password(u["password"]),
-                        name=u["name"],
-                        role=u["role"],
-                        current_semester=u["current_semester"],
-                        department=u["department"],
-                        college_id=u["college_id"],
-                    )
-                    session.add(user_obj)
+                logger.info("Database appears unseeded — seeding demo KTU 2024 Scheme users...")
+                import hashlib
+                def _hash(pwd: str) -> str:
+                    salt = "campuslab_salt_ktu2024"
+                    key = hashlib.pbkdf2_hmac("sha256", pwd.encode(), salt.encode(), 100_000)
+                    return f"pbkdf2:sha256:100000${salt}${key.hex()}"
+                demo_users = [
+                    ("11111111-1111-1111-1111-111111111111", "24CS0142", "TVE24CS042", "adarsh.s@campuslab.edu", "Adarsh S", "student", "S4", "password123"),
+                    ("22222222-2222-2222-2222-222222222222", "FAC081",   "KTUFAC081",  "priya.k@campuslab.edu",  "Dr. Priya K.", "faculty", "S4", "password123"),
+                    ("33333333-3333-3333-3333-333333333333", "ADM001",   "KTUADM001",  "admin@campuslab.edu",    "CampusLab Administrator", "admin", "S4", "adminpassword123"),
+                ]
+                for uid, adm, reg, email, name, role, sem, pwd in demo_users:
+                    await session.execute(text(
+                        "INSERT INTO users (id, admission_number, ktu_reg_id, email, hashed_password, name, role, current_semester, department, college_id) "
+                        "VALUES (:id, :adm, :reg, :email, :pwd, :name, :role::user_role_enum, :sem::semester_enum, 'Computer Science & Engineering', 'CET_KTU') "
+                        "ON CONFLICT (admission_number) DO NOTHING"
+                    ), {"id": uid, "adm": adm, "reg": reg, "email": email, "pwd": _hash(pwd), "name": name, "role": role, "sem": sem})
                 await session.commit()
-                logger.info("Demo users seeded.")
+                logger.info("Demo users seeded successfully.")
     except Exception as e:
-        logger.warning(f"Auto-seed check: {e}")
+        logger.warning(f"Auto-seed skipped: {e}")
 
     # Launch background TTL Sweeper task
     sweeper_task = asyncio.create_task(run_ttl_sweeper(interval_seconds=60))

@@ -52,12 +52,11 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 
 async def init_db() -> None:
-    """Initialize database tables on application startup (essential for SQLite local dev)."""
-    async with engine.begin() as conn:
-        # Import all models to ensure they are registered with Base.metadata
-        from ..models import user, course, experiment, session, submission, settings_model, audit, worker  # noqa
-        await conn.run_sync(Base.metadata.create_all)
-    logger.info("Database initialized successfully.")
+    """Skip SQLAlchemy create_all — tables are managed by schema.sql mounted
+    at /docker-entrypoint-initdb.d/01_schema.sql in the postgres container.
+    Just validate connectivity here."""
+    await check_db_health()
+    logger.info("Database connectivity verified.")
 
 
 async def check_db_health() -> bool:
