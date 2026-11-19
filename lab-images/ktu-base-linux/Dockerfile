@@ -153,9 +153,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Configure passwordless sudo for student inside the sandbox container
-#    Ubuntu 24.04 base image ships with an 'ubuntu' user at UID/GID 1000 — remove it first
-RUN userdel -r ubuntu 2>/dev/null || true && \
-    groupdel ubuntu 2>/dev/null || true && \
+#    Ubuntu 24.04 base image ships with 'ubuntu' user/group at UID/GID 1000
+#    Remove any existing user/group at UID/GID 1000 before creating 'student'
+RUN if getent passwd 1000 >/dev/null 2>&1; then \
+        userdel -r "$(getent passwd 1000 | cut -d: -f1)"; \
+    fi && \
+    if getent group 1000 >/dev/null 2>&1; then \
+        groupdel "$(getent group 1000 | cut -d: -f1)"; \
+    fi && \
     groupadd -g 1000 student && \
     useradd -u 1000 -g student -s /bin/bash -m -d /home/student student && \
     echo "student ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/student && \
