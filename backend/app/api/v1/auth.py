@@ -30,14 +30,17 @@ async def login(req: LoginRequest, request: Request, db: AsyncSession = Depends(
     client_ip = request.client.host if request.client else "127.0.0.1"
 
     if not user or not verify_password(req.password, user.hashed_password):
-        await audit_service.log_event(
-            db=db,
-            request_id="req-login-fail",
-            event_type="AUTH_FAILURE",
-            admission_number=adm_no,
-            ip_address=client_ip,
-            details={"reason": "Invalid admission number or password"},
-        )
+        try:
+            await audit_service.log_event(
+                db=db,
+                request_id="req-login-fail",
+                event_type="AUTH_FAILURE",
+                admission_number=adm_no,
+                ip_address=client_ip,
+                details={"reason": "Invalid admission number or password"},
+            )
+        except Exception:
+            pass
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid admission number or password. Check credentials and retry.",
@@ -54,15 +57,18 @@ async def login(req: LoginRequest, request: Request, db: AsyncSession = Depends(
         }
     )
 
-    await audit_service.log_event(
-        db=db,
-        request_id="req-login-ok",
-        event_type="AUTH_SUCCESS",
-        user_id=user.id,
-        admission_number=user.admission_number,
-        ip_address=client_ip,
-        details={"role": user.role},
-    )
+    try:
+        await audit_service.log_event(
+            db=db,
+            request_id="req-login-ok",
+            event_type="AUTH_SUCCESS",
+            user_id=user.id,
+            admission_number=user.admission_number,
+            ip_address=client_ip,
+            details={"role": user.role},
+        )
+    except Exception:
+        pass
 
     return TokenResponse(
         access_token=token,
