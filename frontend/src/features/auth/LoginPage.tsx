@@ -8,7 +8,7 @@ import { ASSETS } from '../../assets';
 
 export default function LoginPage() {
   const [admissionNo, setAdmissionNo] = useState('24CS0142');
-  const [password, setPassword] = useState('••••••••');
+  const [password, setPassword] = useState('password123');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
