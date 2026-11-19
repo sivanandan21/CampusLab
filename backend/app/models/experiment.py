@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Integer, Text, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, String, Integer, Text, DateTime, ForeignKey, UniqueConstraint, Uuid, JSON
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from ..core.database import Base
 
@@ -8,18 +9,18 @@ from ..core.database import Base
 class Experiment(Base):
     __tablename__ = "experiments"
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    course_id = Column(String(36), ForeignKey("courses.id", ondelete="CASCADE"), nullable=False, index=True)
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    course_id = Column(Uuid, ForeignKey("courses.id", ondelete="CASCADE"), nullable=False, index=True)
     exp_slug = Column(String(64), nullable=False, index=True)
     exp_number = Column(Integer, nullable=False, default=1)
     title = Column(String(255), nullable=False)
     question = Column(Text, nullable=False)
     duration_minutes = Column(Integer, nullable=False, default=45)
     environment = Column(String(128), nullable=False, default="Isolated Linux Sandbox")
-    objectives_json = Column(Text, nullable=False, default="[]")
-    practice_skills_json = Column(Text, nullable=False, default="[]")
-    checklist_steps_json = Column(Text, nullable=False, default="[]")
-    submission_requirements_json = Column(Text, nullable=False, default="{}")
+    objectives_json = Column(JSON().with_variant(JSONB, "postgresql"), nullable=False, default=list)
+    practice_skills_json = Column(JSON().with_variant(JSONB, "postgresql"), nullable=False, default=list)
+    checklist_steps_json = Column(JSON().with_variant(JSONB, "postgresql"), nullable=False, default=list)
+    submission_requirements_json = Column(JSON().with_variant(JSONB, "postgresql"), nullable=False, default=dict)
     sample_starter_code = Column(Text, nullable=True)
     solution_hint = Column(Text, nullable=True)
     initial_cmd = Column(String(255), nullable=True)

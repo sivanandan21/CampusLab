@@ -1,13 +1,13 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Integer, Float, DateTime
+from sqlalchemy import Column, String, Integer, Float, DateTime, Uuid
 from ..core.database import Base
 
 
 class WorkerNode(Base):
     __tablename__ = "worker_nodes"
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
     hostname = Column(String(128), unique=True, nullable=False)
     ip_address = Column(String(64), nullable=False)
     port = Column(Integer, nullable=False, default=8001)

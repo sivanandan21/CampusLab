@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Boolean, DateTime
+from sqlalchemy import Column, String, Boolean, DateTime, Uuid
 from sqlalchemy.orm import relationship
 from ..core.database import Base
 
@@ -8,7 +8,7 @@ from ..core.database import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
     admission_number = Column(String(32), unique=True, nullable=False, index=True)
     ktu_reg_id = Column(String(32), unique=True, nullable=True)
     email = Column(String(255), unique=True, nullable=False, index=True)
