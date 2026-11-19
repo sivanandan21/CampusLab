@@ -153,8 +153,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Configure passwordless sudo for student inside the sandbox container
-RUN groupadd -g 1000 student && \
-    useradd -u 1000 -g student -s /bin/bash -m -d /home/student student && \
+#    --force makes groupadd succeed even if GID 1000 already exists (Ubuntu 24.04 base ships with one)
+RUN groupadd --force -g 1000 student && \
+    useradd -u 1000 -g student -s /bin/bash -m -d /home/student student || true && \
     echo "student ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/student && \
     chmod 0440 /etc/sudoers.d/student
 
