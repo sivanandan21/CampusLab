@@ -18,6 +18,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     TERM=xterm-256color \
     HOME=/home/student
 
+# Prevent background service autostart during package installation in container build
+RUN echo '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d
+
 # 1. Update package lists and install almost every standard Linux command and utility
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # Core GNU Utilities & File Management
@@ -56,7 +59,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ltrace \
     time \
     sysstat \
-    dstat \
     iotop \
     \
     # Networking & Diagnostic Tools
