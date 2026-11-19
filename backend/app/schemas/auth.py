@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class LoginRequest(BaseModel):
@@ -23,6 +23,11 @@ class UserResponse(BaseModel):
     department: str
     college_id: str
     avatar_url: Optional[str] = None
+
+    @field_validator("id", "admission_number", "email", "name", "role", "current_semester", "department", "college_id", mode="before")
+    @classmethod
+    def coerce_to_str(cls, v):
+        return str(v) if v is not None else v
 
     class Config:
         from_attributes = True

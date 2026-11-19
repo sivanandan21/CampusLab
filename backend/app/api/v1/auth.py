@@ -49,11 +49,11 @@ async def login(req: LoginRequest, request: Request, db: AsyncSession = Depends(
     # Issue access token
     token = create_access_token(
         data={
-            "sub": user.id,
-            "admission_number": user.admission_number,
-            "role": user.role,
-            "name": user.name,
-            "semester": user.current_semester,
+            "sub": str(user.id),
+            "admission_number": str(user.admission_number),
+            "role": str(user.role),
+            "name": str(user.name),
+            "semester": str(user.current_semester),
         }
     )
 
